@@ -10,6 +10,9 @@ import { getAuth } from 'firebase/auth'
 
 import AuthPage from './pages/AuthPage';
 import News from './pages/News';
+import Library from './pages/Library';
+
+export const BASE_URL = `https://ca18a0d5-cf20-4dc9-93fb-47752d961543-00-vme42hdhelap.sisko.replit.dev`;
 
 function Layout() {
     const { currentUser } = useContext(AuthContext);
@@ -28,7 +31,7 @@ function Layout() {
                         <Nav className='me-auto'>
                             <Nav.Link as={Link} to='/news'><strong>News</strong></Nav.Link>
                             <Nav.Link><strong>Memories</strong></Nav.Link>
-                            <Nav.Link><strong>New Game</strong></Nav.Link>
+                            <Nav.Link as={Link} to='/games'><strong>Library</strong></Nav.Link>
                             <Nav.Link><strong>Tracker</strong></Nav.Link>
                             <Nav.Link onClick={() => {
                                 if (currentUser) {
@@ -57,6 +60,7 @@ export default function App() {
                         <Routes>
                             <Route path='/' element={<Layout />}>
                                 <Route path='login' element={<AuthPage />} />
+                                <Route path='games' element={<Library />} />
                                 <Route path='news' element={<News />} />
                             </Route>
                         </Routes>
