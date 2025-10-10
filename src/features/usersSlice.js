@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { db, storage } from '../firebase';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, setDoc, deleteDoc } from 'firebase/firestore';
 
+//save username and user pfp 
 export const saveUser = createAsyncThunk(
     'users/saveUser',
     async ({ userId, username, file }) => {
@@ -29,6 +30,7 @@ export const saveUser = createAsyncThunk(
     }
 )
 
+//save game name and image url 
 export const saveGame = createAsyncThunk(
     'games/saveGame',
     async ({ userId, file, name }) => {
@@ -50,9 +52,10 @@ export const saveGame = createAsyncThunk(
     }
 )
 
+//fetch game profile image
 export const fetchImage = createAsyncThunk(
     'games/fetchImages',
-    async ({ userId }) => {
+    async ({ userId}) => {
         try {
             const imageRef = collection(db, `users/${userId}/games`);
             const querySnapshot = await getDocs(imageRef);
@@ -61,6 +64,21 @@ export const fetchImage = createAsyncThunk(
                 ...image.data(),
             }))
             return docs;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+)
+
+//delete game profile image
+export const deleteGame = createAsyncThunk(
+    'games/deleteGame',
+    async ({ userId, imageId }) => {
+        try {
+            const gameRef = doc(db, `users/${userId}/games/${imageId}`);
+            await deleteDoc(gameRef);
+            return name;
         } catch (error) {
             console.error(error);
             throw error;
@@ -83,6 +101,10 @@ const usersSlice = createSlice({
             })
             .addCase(fetchImage.fulfilled, (state, action) => {
                 state.images = action.payload;
+            })
+            .addCase(deleteGame.fulfilled, (state, action) => {
+                const deletedGame = action.payload
+                state.games = state.games.filter((game) => game.name !== deletedGame);
             })
     }
 })

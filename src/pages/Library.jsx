@@ -12,6 +12,7 @@ import GameCard from '../components/games/GameCard';
 
 export default function Library() {
     const images = useSelector((state) => state.users.images);
+
     const dispatch = useDispatch();
 
     const { currentUser } = useContext(AuthContext);
@@ -39,10 +40,10 @@ export default function Library() {
                     {games ? (
                         games.map((game, index) => {
                             //pinpoint the exact image url for the current game
-                            const image = images.find(img => img.name === game.name)?.imageUrl;
+                            const image = images.find(img => img.name === game.name);
                             return (
                                 <Col key={index}>
-                                    <GameCard game={game} imageUrl={image} />
+                                    <GameCard userId={currentUser?.uid} imageId={image?.id} game={game} imageUrl={image?.imageUrl} />
                                 </Col>
                             )
                         })
