@@ -35,7 +35,7 @@ export default function GameCard({ userId, imageId, game, imageUrl }) {
 
     return (
         <>
-            <Card className='mt-3'>
+            <Card style={{ backgroundColor: '#FFF7F3', border: 'transparent' }} className='mt-3'>
                 <Card.Body>
                     <Row>
                         <Col>

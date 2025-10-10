@@ -11,6 +11,7 @@ import { getAuth } from 'firebase/auth'
 import AuthPage from './pages/AuthPage';
 import News from './pages/News';
 import Library from './pages/Library';
+import Memories from './pages/Memories';
 
 export const BASE_URL = `https://ca18a0d5-cf20-4dc9-93fb-47752d961543-00-vme42hdhelap.sisko.replit.dev`;
 
@@ -30,7 +31,7 @@ function Layout() {
                     <Navbar.Collapse id='main-navbar'>
                         <Nav className='me-auto'>
                             <Nav.Link as={Link} to='/news'><strong>News</strong></Nav.Link>
-                            <Nav.Link><strong>Memories</strong></Nav.Link>
+                            <Nav.Link as={Link} to='/memories'><strong>Memories</strong></Nav.Link>
                             <Nav.Link as={Link} to='/games'><strong>Library</strong></Nav.Link>
                             <Nav.Link><strong>Tracker</strong></Nav.Link>
                             <Nav.Link onClick={() => {
@@ -61,6 +62,7 @@ export default function App() {
                             <Route path='/' element={<Layout />}>
                                 <Route path='login' element={<AuthPage />} />
                                 <Route path='games' element={<Library />} />
+                                <Route path='memories' element={<Memories />} />
                                 <Route path='news' element={<News />} />
                             </Route>
                         </Routes>
