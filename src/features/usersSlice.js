@@ -1,9 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { db, storage } from '../firebase';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
 
-// save user, images to firestore and info to fire db
 export const saveUser = createAsyncThunk(
     'users/saveUser',
     async ({ userId, username, file }) => {
@@ -32,15 +31,15 @@ export const saveUser = createAsyncThunk(
 
 export const saveGame = createAsyncThunk(
     'games/saveGame',
-    async ({ userId, file }) => {
+    async ({ userId, file, name }) => {
         let imageUrl = "";
-        const imageRef = ref(storage, `games/${file}`);
+        const imageRef = ref(storage, `games/${file.name}`);
         const response = await uploadBytes(imageRef, file);
         imageUrl = await getDownloadURL(response.ref);
 
         const gamesRef = collection(db, `users/${userId}/games`);
         const newGameRef = doc(gamesRef);
-        await setDoc(newGameRef, { imageUrl });
+        await setDoc(newGameRef, { name, imageUrl });
         const newDoc = await getDoc(newGameRef);
 
         const game = {
@@ -51,9 +50,29 @@ export const saveGame = createAsyncThunk(
     }
 )
 
+export const fetchImage = createAsyncThunk(
+    'games/fetchImages',
+    async ({ userId }) => {
+        try {
+            const imageRef = collection(db, `users/${userId}/games`);
+            const querySnapshot = await getDocs(imageRef);
+            const docs = querySnapshot.docs.map((image) => ({
+                id: image.id,
+                ...image.data(),
+            }))
+            return docs;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+)
+
+
+
 const usersSlice = createSlice({
     name: 'users',
-    initialState: { users: [], games: [] },
+    initialState: { users: [], games: [], images: [] },
     extraReducers: (builder) => {
         builder
             .addCase(saveUser.fulfilled, (state, action) => {
@@ -61,6 +80,9 @@ const usersSlice = createSlice({
             })
             .addCase(saveGame.fulfilled, (state, action) => {
                 state.games = action.payload;
+            })
+            .addCase(fetchImage.fulfilled, (state, action) => {
+                state.images = action.payload;
             })
     }
 })

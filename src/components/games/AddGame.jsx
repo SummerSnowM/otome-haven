@@ -29,7 +29,7 @@ export default function AddGame({ showModal, closeModal }) {
 
     const handleSubmit = () => {
         //upload image to firebase storage
-        dispatch(saveGame({ userId: currentUser?.uid, file }))
+        dispatch(saveGame({ userId: currentUser?.uid, name, file }))
 
         //post data to neon console
         const data = {
