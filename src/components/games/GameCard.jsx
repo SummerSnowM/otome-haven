@@ -6,16 +6,18 @@ import axios from 'axios'
 import { BASE_URL } from '../../App';
 import { deleteGame } from '../../features/usersSlice';
 
+import UpdateGame from './UpdateGame';
 import Notification from '../Notification';
 
 export default function GameCard({ userId, imageId, game, imageUrl }) {
     const [message, setMessage] = useState("");
     const [showToast, setShowToast] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     const dispatch = useDispatch();
 
     const handleDelete = () => {
         //delete info from firebase db
-        dispatch(deleteGame({ userId, imageId}));
+        dispatch(deleteGame({ userId, imageId }));
 
         //delete game from neon console
         axios.delete(`${BASE_URL}/games/${game.id}`)
@@ -27,6 +29,9 @@ export default function GameCard({ userId, imageId, game, imageUrl }) {
 
     const handleOpenToast = () => setShowToast(true);
     const handleCloseToast = () => setShowToast(false);
+
+    const handleOpenModal = () => setShowModal(true);
+    const handleCloseModal = () => setShowModal(false);
 
     return (
         <>
@@ -41,7 +46,7 @@ export default function GameCard({ userId, imageId, game, imageUrl }) {
                             <Button style={{ backgroundColor: '#E6B2BA', border: 'transparent' }} className='m-1'>
                                 <i class="bi bi-people-fill"></i>
                             </Button>
-                            <Button style={{ backgroundColor: '#E6B2BA', border: 'transparent' }} className='m-1'>
+                            <Button onClick={() => handleOpenModal()} style={{ backgroundColor: '#E6B2BA', border: 'transparent' }} className='m-1'>
                                 <i class="bi bi-pencil-fill"></i>
                             </Button>
                             <Button onClick={() => handleDelete()} style={{ backgroundColor: '#E6B2BA', border: 'transparent' }} className='m-1'>
@@ -52,6 +57,7 @@ export default function GameCard({ userId, imageId, game, imageUrl }) {
                 </Card.Body>
             </Card>
 
+            <UpdateGame showModal={showModal} game={game} closeModal={handleCloseModal} />
             <Notification message={message} closeToast={handleCloseToast} showToast={showToast} />
         </>
     )
