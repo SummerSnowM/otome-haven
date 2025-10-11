@@ -1,5 +1,5 @@
 import { Container, Row, Col, Image, Button } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchGame, fetchCharProfile } from '../features/usersSlice';
@@ -9,7 +9,6 @@ import { BASE_URL } from '../App';
 
 export default function GameProfile() {
     const { userId, gameId, id } = useParams();
-
 
     //get target game and game pfp
     const gameImg = useSelector((state) => state.users.game);
@@ -21,6 +20,7 @@ export default function GameProfile() {
     const [characters, setCharacters] = useState([]);
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         dispatch(fetchGame({ userId, gameId }));
@@ -69,7 +69,7 @@ export default function GameProfile() {
                                     {characters.map((char, index) => {
                                         const currentChar = charImg.find(img => img.name === char.name);
                                         return (
-                                            <Col xs={6} sm={4} md={3} lg={2} key={index}>
+                                            <Col onClick={() => navigate(`/memories/${userId}/${gameId}/${currentChar?.id}/${char.id}`)} xs={6} sm={4} md={3} lg={2} key={index}>
                                                 <Image className='w-100 h-75' src={currentChar?.imageUrl} roundedCircle />
                                                 <p className='text-center mt-2'><strong>{char.name}</strong></p>
                                             </Col>
@@ -80,7 +80,6 @@ export default function GameProfile() {
                         )}
                     </>
                 )}
-
             </Container>
         </>
     )

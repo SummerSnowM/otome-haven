@@ -173,6 +173,24 @@ export const fetchCharProfile = createAsyncThunk(
     }
 )
 
+export const fetchCharImage = createAsyncThunk(
+    'characters/fetchChar',
+    async ({userId, gameId, charId}) => {
+        try {
+            const charRef = doc(db , `users/${userId}/games/${gameId}/characters/${charId}`);
+            const char = await getDoc(charRef);
+            const docs = {
+                id: char.id,
+                ...char.data()
+            }
+            return docs;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+)
+
 export const deleteCharacter = createAsyncThunk(
     'characters/deleteCharacter',
     async ({ userId, gameId, charId }) => {
@@ -193,7 +211,7 @@ export const deleteCharacter = createAsyncThunk(
 
 const usersSlice = createSlice({
     name: 'users',
-    initialState: { users: [], games: [], game: [], images: [], characters: [] },
+    initialState: { users: [], games: [], game: [], images: [], characters: [], character: [] },
     extraReducers: (builder) => {
         builder
             .addCase(saveUser.fulfilled, (state, action) => {
@@ -221,6 +239,9 @@ const usersSlice = createSlice({
             })
             .addCase(fetchGame.fulfilled, (state, action) => {
                 state.game = action.payload;
+            })
+            .addCase(fetchCharImage.fulfilled, (state, action) => {
+                state.character = action.payload;
             })
     }
 })
