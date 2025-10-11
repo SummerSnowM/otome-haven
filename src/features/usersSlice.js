@@ -3,6 +3,9 @@ import { db, storage } from '../firebase';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { collection, doc, getDoc, getDocs, setDoc, deleteDoc } from 'firebase/firestore';
 
+//-----------------------------
+//           Users
+//-----------------------------
 //save username and user pfp 
 export const saveUser = createAsyncThunk(
     'users/saveUser',
@@ -30,6 +33,10 @@ export const saveUser = createAsyncThunk(
     }
 )
 
+//-----------------------------
+//           Games
+//-----------------------------
+
 //save game name and image url 
 export const saveGame = createAsyncThunk(
     'games/saveGame',
@@ -55,7 +62,7 @@ export const saveGame = createAsyncThunk(
 //fetch game profile image
 export const fetchImage = createAsyncThunk(
     'games/fetchImages',
-    async ({ userId}) => {
+    async ({ userId }) => {
         try {
             const imageRef = collection(db, `users/${userId}/games`);
             const querySnapshot = await getDocs(imageRef);
@@ -86,18 +93,76 @@ export const deleteGame = createAsyncThunk(
     }
 )
 
+//-----------------------------
+//         Characters
+//-----------------------------
 
+export const saveCharacter = createAsyncThunk(
+    'characters/saveCharacter',
+    async ({ userId, gameId, name, file, cgs }) => {
+        //upload pfp to firestorage
+        let imageUrl = "";
+        const pfpRef = ref(storage, `characters/${file.name}`);
+        const response = await uploadBytes(pfpRef, file);
+        imageUrl = await getDownloadURL(response.ref);
+
+        //upload cgs to firestore
+        const urls = [];
+        for (const cg of cgs) {
+            const cgsRef = ref(storage, `cgs/${cg.name}`);
+            const result = await uploadBytes(cgsRef, cg);
+            let imgUrl = await getDownloadURL(result.ref);
+            urls.push(imgUrl);
+        }
+
+        //upload pfp to firebase db
+        const gamesRef = collection(db, `users/${userId}/games/${gameId}/characters`);
+        const newCharRef = doc(gamesRef);
+        await setDoc(newCharRef, { name, imageUrl });
+        const newChar = await getDoc(newCharRef);
+
+        const char = {
+            id: newChar.id,
+            ...newChar.data(),
+        }
+
+        //upload cg to firebase db
+        const charactersRef = collection(db, `users/${userId}/games/${gameId}/characters/${char.id}/cgs`);
+        const newCgRef = doc(charactersRef);
+        await setDoc(newCgRef, { urls });
+
+        return char;
+    }
+)
+
+export const fetchCharProfile = createAsyncThunk(
+    'characters/fetchImage',
+    async ({ userId, gameId }) => {
+        try {
+            const charRef = collection(db, `users/${userId}/games/${gameId}/characters`);
+            const querySnapshot = await getDocs(charRef);
+            const docs = querySnapshot.docs.map((char) => ({
+                id: char.id,
+                ...char.data(),
+            }))
+            return docs;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+)
 
 const usersSlice = createSlice({
     name: 'users',
-    initialState: { users: [], games: [], images: [] },
+    initialState: { users: [], games: [], images: [], characters: [] },
     extraReducers: (builder) => {
         builder
             .addCase(saveUser.fulfilled, (state, action) => {
                 state.users = action.payload;
             })
             .addCase(saveGame.fulfilled, (state, action) => {
-                state.games = action.payload;
+                state.games.push(action.payload);
             })
             .addCase(fetchImage.fulfilled, (state, action) => {
                 state.images = action.payload;
@@ -105,6 +170,12 @@ const usersSlice = createSlice({
             .addCase(deleteGame.fulfilled, (state, action) => {
                 const deletedGame = action.payload
                 state.games = state.games.filter((game) => game.name !== deletedGame);
+            })
+            .addCase(saveCharacter.fulfilled, (state, action) => {
+                state.characters.push(action.payload)
+            })
+            .addCase(fetchCharProfile.fulfilled, (state, action) => {
+                state.characters = action.payload;
             })
     }
 })

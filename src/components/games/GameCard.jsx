@@ -1,34 +1,28 @@
 import { Card, Row, Col, Button } from 'react-bootstrap';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import axios from 'axios'
 import { BASE_URL } from '../../App';
 import { deleteGame } from '../../features/usersSlice';
 
 import UpdateGame from './UpdateGame';
-import Notification from '../Notification';
 
 export default function GameCard({ userId, imageId, game, imageUrl }) {
-    const [message, setMessage] = useState("");
-    const [showToast, setShowToast] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleDelete = () => {
-        //delete info from firebase db
-        dispatch(deleteGame({ userId, imageId }));
-
         //delete game from neon console
         axios.delete(`${BASE_URL}/games/${game.id}`)
-            .then((response) => setMessage(response.data.message))
+            .then((response) => console.log(response.data.message))
             .catch((error) => console.error(error));
 
-        handleOpenToast();
+        //delete info from firebase db
+        dispatch(deleteGame({ userId, imageId }));
     }
-
-    const handleOpenToast = () => setShowToast(true);
-    const handleCloseToast = () => setShowToast(false);
 
     const handleOpenModal = () => setShowModal(true);
     const handleCloseModal = () => setShowModal(false);
@@ -43,7 +37,7 @@ export default function GameCard({ userId, imageId, game, imageUrl }) {
                         </Col>
                         <Col>
                             <Card.Title>{game.name}</Card.Title>
-                            <Button style={{ backgroundColor: '#E6B2BA', border: 'transparent' }} className='m-1'>
+                            <Button onClick={() => navigate(`/characters/${userId}/${game.id}/${imageId}`)} style={{ backgroundColor: '#E6B2BA', border: 'transparent' }} className='m-1'>
                                 <i class="bi bi-people-fill"></i>
                             </Button>
                             <Button onClick={() => handleOpenModal()} style={{ backgroundColor: '#E6B2BA', border: 'transparent' }} className='m-1'>
@@ -58,7 +52,6 @@ export default function GameCard({ userId, imageId, game, imageUrl }) {
             </Card>
 
             <UpdateGame showModal={showModal} game={game} closeModal={handleCloseModal} />
-            <Notification message={message} closeToast={handleCloseToast} showToast={showToast} />
         </>
     )
 }

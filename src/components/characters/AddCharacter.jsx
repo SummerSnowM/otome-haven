@@ -1,60 +1,56 @@
-import { Modal, Button, Form } from 'react-bootstrap';
-import { useState, useContext } from 'react';
-
-import { AuthContext } from '../AuthProvider';
+import { Modal, Form, Button } from 'react-bootstrap'
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { saveGame } from '../../features/usersSlice';
-import axios from 'axios';
+import axios from 'axios'
+
+import { saveCharacter } from '../../features/usersSlice';
 import { BASE_URL } from '../../App';
 
 import Notification from '../Notification';
 
-export default function AddGame({ showModal, closeModal }) {
+export default function AddCharacter({ showModal, closeModal, imageId, gameId, userId }) {
     const [name, setName] = useState("");
-    const [developer, setDeveloper] = useState("");
-    const [genre, setGenre] = useState("");
-    const [platform, setPlatform] = useState("");
-    const [synopsis, setSynopsis] = useState("");
+    const [voiceActor, setVoiceActor] = useState("");
+    const [personality, setPersonality] = useState("");
+    const [review, setReview] = useState("");
     const [rating, setRating] = useState(0);
     const [file, setFile] = useState(null);
+    const [cgs, setCgs] = useState(null);
 
     const [showToast, setShowToast] = useState(false);
     const [message, setMessage] = useState("");
-
     const dispatch = useDispatch();
-    const { currentUser } = useContext(AuthContext);
 
     const handleOpenToast = () => setShowToast(true);
     const handleCloseToast = () => setShowToast(false);
 
     const handleSubmit = () => {
-        //post data to neon console
+        //upload data to firebase 
+        dispatch(saveCharacter({ userId, gameId: imageId, name, file, cgs }));
+
+        //upload data to neon console
         const data = {
             name,
-            developer,
-            genre,
-            platform,
-            synopsis,
+            voice_actor: voiceActor,
+            personality,
+            review,
             rating
         }
 
-        axios.post(`${BASE_URL}/games/${currentUser?.uid}`, data)
+        axios.post(`${BASE_URL}/characters/${gameId}`, data)
             .then((response) => setMessage(response.data.message))
             .catch((error) => console.error(error));
 
-        //upload image to firebase storage
-        dispatch(saveGame({ userId: currentUser?.uid, name, file }))
-
         //reset values
         setName("");
-        setDeveloper("");
-        setGenre("");
-        setPlatform("");
-        setSynopsis("");
+        setVoiceActor("");
+        setPersonality("");
+        setReview("");
         setRating(0);
         setFile(null);
+        setCgs(null);
 
-        //close modal
+        //close the form
         closeModal();
 
         //open notification
@@ -70,7 +66,7 @@ export default function AddGame({ showModal, closeModal }) {
                 centered
             >
                 <Modal.Header style={{ backgroundColor: '#E6B2BA' }} closeButton>
-                    <Modal.Title>New Game</Modal.Title>
+                    <Modal.Title>New Character</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form onSubmit={(e) => {
@@ -78,7 +74,7 @@ export default function AddGame({ showModal, closeModal }) {
                         handleSubmit();
                     }}>
                         <Form.Group>
-                            <Form.Label>Game Name</Form.Label>
+                            <Form.Label>Character Name</Form.Label>
                             <Form.Control
                                 type='text'
                                 value={name}
@@ -87,45 +83,33 @@ export default function AddGame({ showModal, closeModal }) {
                             />
                         </Form.Group>
 
-                        <Form.Group>
-                            <Form.Label>Developer</Form.Label>
+                        <Form.Group >
+                            <Form.Label>Voice Actor</Form.Label>
                             <Form.Control
                                 type='text'
-                                value={developer}
-                                onChange={e => setDeveloper(e.target.value)}
+                                value={voiceActor}
+                                onChange={e => setVoiceActor(e.target.value)}
                                 required
                             />
                         </Form.Group>
 
                         <Form.Group>
-                            <Form.Label>Genre</Form.Label>
+                            <Form.Label>Personality</Form.Label>
                             <Form.Control
                                 type='text'
-                                value={genre}
-                                onChange={e => setGenre(e.target.value)}
+                                value={personality}
+                                onChange={e => setPersonality(e.target.value)}
                                 required
                             />
                         </Form.Group>
 
-                        <Form.Group>
-                            <Form.Label>Platform</Form.Label>
-                            <Form.Select value={platform} onChange={e => setPlatform(e.target.value)} required>
-                                <option selected></option>
-                                <option value='Playstation 5'>Playstation 5</option>
-                                <option value='Playstation 4'>Playstation 4</option>
-                                <option value='Nintendo Switch'>Nintendo Switch</option>
-                                <option value='PC'>PC</option>
-                                <option value='PS Vita'>PS Vita</option>
-                            </Form.Select>
-                        </Form.Group>
-
-                        <Form.Group>
-                            <Form.Label>Synopsis</Form.Label>
+                        <Form.Group >
+                            <Form.Label>Your Review / Opinion:</Form.Label>
                             <Form.Control
                                 as='textarea'
                                 rows={5}
-                                value={synopsis}
-                                onChange={e => setSynopsis(e.target.value)}
+                                value={review}
+                                onChange={e => setReview(e.target.value)}
                                 required
                             />
                         </Form.Group>
@@ -134,30 +118,37 @@ export default function AddGame({ showModal, closeModal }) {
                             <Form.Label>Rating</Form.Label>
                             <Form.Control
                                 type='number'
+                                max={5}
+                                min={1}
+                                step={0.5}
                                 value={rating}
                                 onChange={e => setRating(e.target.value)}
-                                min={0.5}
-                                max={5}
-                                step={0.5}
                                 required
                             />
                         </Form.Group>
 
                         <Form.Group>
-                            <Form.Label>Game Profile Image</Form.Label>
+                            <Form.Label>Character Profile Image</Form.Label>
                             <Form.Control
                                 type='file'
                                 onChange={e => setFile(e.target.files[0])}
-                                required
                             />
                         </Form.Group>
 
-                        <Button className='w-100 mt-3 rounded-5' type='submit' style={{ backgroundColor: '#E6B2BA', border: 'transparent', color: 'white' }}>Add Game</Button>
+                        <Form.Group>
+                            <Form.Label>Favorite Cgs</Form.Label>
+                            <Form.Control
+                                type='file'
+                                onChange={e => setCgs(e.target.files)}
+                                multiple
+                            />
+                        </Form.Group>
+                        <Button className='w-100 mt-3 rounded-5' style={{ backgroundColor: '#E6B2BA', border: 'transparent', color: 'white' }} type='submit'>Add Character</Button>
                     </Form>
                 </Modal.Body>
             </Modal>
 
-            <Notification showToast={showToast} message={message} closeToast={handleCloseToast} />
+            <Notification message={message} closeToast={handleCloseToast} showToast={showToast} />
         </>
     )
 }
