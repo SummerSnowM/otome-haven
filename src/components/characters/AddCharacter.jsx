@@ -25,9 +25,6 @@ export default function AddCharacter({ showModal, closeModal, imageId, gameId, u
     const handleCloseToast = () => setShowToast(false);
 
     const handleSubmit = () => {
-        //upload data to firebase 
-        dispatch(saveCharacter({ userId, gameId: imageId, name, file, cgs }));
-
         //upload data to neon console
         const data = {
             name,
@@ -40,6 +37,9 @@ export default function AddCharacter({ showModal, closeModal, imageId, gameId, u
         axios.post(`${BASE_URL}/characters/${gameId}`, data)
             .then((response) => setMessage(response.data.message))
             .catch((error) => console.error(error));
+
+        //upload data to firebase 
+        dispatch(saveCharacter({ userId, gameId: imageId, name, file, cgs }));
 
         //reset values
         setName("");

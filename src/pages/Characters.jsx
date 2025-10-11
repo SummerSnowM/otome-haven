@@ -29,7 +29,7 @@ export default function Characters() {
         dispatch(fetchCharProfile({ userId, gameId: imgId }))
     }, [characters, gameId, dispatch, userId, imgId])
 
-    console.log(images);
+    // console.log(images);
 
     return (
         <>
@@ -40,10 +40,10 @@ export default function Characters() {
                 <Row xs={1} sm={2} md={3} lg={4}>
                     {characters ? (
                         characters.map((char, index) => {
-                            const imageUrl = images.find(img => img.name === char.name)?.imageUrl;
+                            const image = images.find(img => img.name === char.name);
                             return (
                                 <Col key={index}>
-                                    <CharacterCard character={char} imageUrl={imageUrl} />
+                                    <CharacterCard character={char} image={image} gameId={imgId} userId={userId} />
                                 </Col>
                             )
                         })

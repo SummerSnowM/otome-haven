@@ -153,6 +153,24 @@ export const fetchCharProfile = createAsyncThunk(
     }
 )
 
+export const deleteCharacter = createAsyncThunk(
+    'characters/deleteCharacter',
+    async ({ userId, gameId, charId }) => {
+        try {
+            const charRef = doc(db, `users/${userId}/games/${gameId}/characters/${charId}`);
+            await deleteDoc(charRef);
+            const cgRef = collection(db, `users/${userId}/games/${gameId}/characters/${charId}/cgs`);
+            const snapshot = await getDocs(cgRef);
+            await deleteDoc(snapshot.docs[0].ref);
+            return name;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+
+    }
+)
+
 const usersSlice = createSlice({
     name: 'users',
     initialState: { users: [], games: [], images: [], characters: [] },
@@ -172,10 +190,14 @@ const usersSlice = createSlice({
                 state.games = state.games.filter((game) => game.name !== deletedGame);
             })
             .addCase(saveCharacter.fulfilled, (state, action) => {
-                state.characters.push(action.payload)
+                state.characters.push(action.payload);
             })
             .addCase(fetchCharProfile.fulfilled, (state, action) => {
                 state.characters = action.payload;
+            })
+            .addCase(deleteCharacter.fulfilled, (state, action) => {
+                const deletedChar = action.payload;
+                state.characters = state.characters.filter((char) => char.name !== deletedChar);
             })
     }
 })
