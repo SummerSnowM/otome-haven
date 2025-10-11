@@ -2,15 +2,17 @@ import { Container, Row, Col, Image } from 'react-bootstrap';
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { fetchCharImage } from '../features/usersSlice';
+import { fetchCharImage, fetchCgs } from '../features/usersSlice';
 
 import { BASE_URL } from '../App';
 import axios from 'axios';
 
 export default function CharacterProfile() {
     const { userId, gameId, charId, id } = useParams();
+
     const charImage = useSelector((state) => state.users.character);
     const [character, setCharacter] = useState(null);
+    const cgs = useSelector((state) => state.users.images);
 
     const dispatch = useDispatch();
 
@@ -20,8 +22,12 @@ export default function CharacterProfile() {
         axios.get(`${BASE_URL}/characters/single/${id}`)
             .then((response) => setCharacter(response.data.data))
             .catch((error) => console.error(error));
+
+        //get character cgs
+        dispatch(fetchCgs({ userId, gameId, charId }));
     }, [dispatch, id, userId, gameId, charId])
 
+    console.log(cgs);
     return (
         <>
             <Container className='mt-4'>
@@ -29,9 +35,9 @@ export default function CharacterProfile() {
                     <>
                         <Row className='w-75'>
                             <Col xs={12} md={5}>
-                                <Image className='w-100 mx-auto' style={{ maxHeight: '440px'}} src={charImage?.imageUrl} fluid />
+                                <Image className='w-100 mx-auto' style={{ maxHeight: '440px' }} src={charImage?.imageUrl} fluid />
                             </Col>
-                            <Col>
+                            <Col style={{ backgroundColor: '#FFF7F3' }} className='rounded-3'>
                                 <h3 className='mt-2'>{character[0]?.name}</h3>
                                 <p><strong>Voice Actor:</strong> {character[0]?.voice_actor}</p>
                                 <p><strong>Personality:</strong> {character[0]?.personality}</p>
@@ -41,6 +47,20 @@ export default function CharacterProfile() {
                             </Col>
                         </Row>
                         <hr />
+                        <h3>Favorite Cgs</h3>
+                        {cgs && (
+                            <>
+                                <Row style={{ backgroundColor: '#FFF7F3' }} className='mt-3 p-3 rounded-3'>
+                                    {cgs[0]?.urls.map((img, index) => {
+                                        return (
+                                            <Col xs={1} sm={2} md={3} className='m-2' key={index}>
+                                                <Image src={img} className='w-100 h-100 rounded-2' style={{ maxWidth: '400px', maxHeight: '500px' }} fluid />
+                                            </Col>
+                                        )
+                                    })}
+                                </Row>
+                            </>
+                        )}
                     </>
                 )}
 

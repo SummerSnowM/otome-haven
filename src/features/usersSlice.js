@@ -175,14 +175,32 @@ export const fetchCharProfile = createAsyncThunk(
 
 export const fetchCharImage = createAsyncThunk(
     'characters/fetchChar',
-    async ({userId, gameId, charId}) => {
+    async ({ userId, gameId, charId }) => {
         try {
-            const charRef = doc(db , `users/${userId}/games/${gameId}/characters/${charId}`);
+            const charRef = doc(db, `users/${userId}/games/${gameId}/characters/${charId}`);
             const char = await getDoc(charRef);
             const docs = {
                 id: char.id,
                 ...char.data()
             }
+            return docs;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+)
+
+export const fetchCgs = createAsyncThunk(
+    'characters/fetchCgs',
+    async ({ userId, gameId, charId }) => {
+        try {
+            const cgRef = collection(db, `users/${userId}/games/${gameId}/characters/${charId}/cgs`);
+            const cg = await getDocs(cgRef);
+            const docs = cg.docs.map((img) => ({
+                id: img.id,
+                ...img.data()
+            }))
             return docs;
         } catch (error) {
             console.error(error);
@@ -242,6 +260,9 @@ const usersSlice = createSlice({
             })
             .addCase(fetchCharImage.fulfilled, (state, action) => {
                 state.character = action.payload;
+            })
+            .addCase(fetchCgs.fulfilled, (state, action) => {
+                state.images = action.payload;
             })
     }
 })

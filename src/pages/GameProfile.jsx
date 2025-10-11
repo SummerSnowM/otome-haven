@@ -37,7 +37,6 @@ export default function GameProfile() {
 
     }, [dispatch, userId, gameId, id])
 
-    console.log(charImg);
     return (
         <>
             <Container className='mt-4'>
@@ -48,7 +47,7 @@ export default function GameProfile() {
                             <Col xs={12} md={5}>
                                 <Image className='h-100 w-100' src={gameImg?.imageUrl} />
                             </Col>
-                            <Col>
+                            <Col style={{ backgroundColor: '#FFF7F3' }} className='rounded-3'>
                                 <h3 className='mt-2'>{game[0]?.name}</h3>
                                 <p><strong>Genre:</strong> {game[0]?.genre}</p>
                                 <p><strong>Developer:</strong> {game[0]?.developer}</p>
@@ -65,7 +64,7 @@ export default function GameProfile() {
 
                         {showCharacters && (
                             <>
-                                <Row className='mt-3'>
+                                <Row style={{ backgroundColor: '#FFF7F3' }} className='mt-3 p-3 rounded-3'>
                                     {characters.map((char, index) => {
                                         const currentChar = charImg.find(img => img.name === char.name);
                                         return (
