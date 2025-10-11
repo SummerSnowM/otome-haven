@@ -1,6 +1,7 @@
 import { Container, Row, Col } from 'react-bootstrap';
 import { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from "../App";
 import { AuthContext } from "../components/AuthProvider";
 import { fetchImage } from '../features/usersSlice';
@@ -15,6 +16,7 @@ export default function Memories() {
     const images = useSelector(state => state.users.images);
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios.get(`${BASE_URL}/games/${currentUser?.uid}`)
@@ -22,7 +24,7 @@ export default function Memories() {
             .catch((error) => console.error(error));
 
         dispatch(fetchImage({ userId: currentUser?.uid }));
-    }, [games, currentUser, dispatch])
+    }, [currentUser, dispatch])
 
     return (
         <>
@@ -31,7 +33,7 @@ export default function Memories() {
                     {games ? games.map((game, index) => {
                         const image = images.find(img => img.name === game.name);
                         return (
-                            <Col key={index}>
+                            <Col onClick={() => navigate(`/memories/${currentUser?.uid}/${image?.id}/${game.id}`)} key={index}>
                                 <GameHeader game={game} imageUrl={image?.imageUrl} />
                             </Col>
                         )

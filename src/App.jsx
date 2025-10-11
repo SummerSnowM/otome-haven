@@ -13,6 +13,7 @@ import News from './pages/News';
 import Library from './pages/Library';
 import Memories from './pages/Memories';
 import Characters from './pages/Characters';
+import GameProfile from './pages/GameProfile';
 
 export const BASE_URL = `https://ca18a0d5-cf20-4dc9-93fb-47752d961543-00-vme42hdhelap.sisko.replit.dev`;
 
@@ -64,6 +65,7 @@ export default function App() {
                                 <Route path='login' element={<AuthPage />} />
                                 <Route path='games' element={<Library />} />
                                 <Route path='memories' element={<Memories />} />
+                                <Route path='memories/:userId/:gameId/:id' element={<GameProfile />} />
                                 <Route path='characters/:userId/:gameId/:imgId' element={<Characters />} />
                                 <Route path='news' element={<News />} />
                             </Route>

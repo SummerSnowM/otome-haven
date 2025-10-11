@@ -37,7 +37,7 @@ export const saveUser = createAsyncThunk(
 //           Games
 //-----------------------------
 
-//save game name and image url 
+//save game name and image url (info)
 export const saveGame = createAsyncThunk(
     'games/saveGame',
     async ({ userId, file, name }) => {
@@ -59,7 +59,7 @@ export const saveGame = createAsyncThunk(
     }
 )
 
-//fetch game profile image
+//fetch all game profile images
 export const fetchImage = createAsyncThunk(
     'games/fetchImages',
     async ({ userId }) => {
@@ -86,6 +86,26 @@ export const deleteGame = createAsyncThunk(
             const gameRef = doc(db, `users/${userId}/games/${imageId}`);
             await deleteDoc(gameRef);
             return name;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+)
+
+//fetch game profile image
+export const fetchGame = createAsyncThunk(
+    'games/fetchGame',
+    async ({ userId, gameId }) => {
+        try {
+            const imageRef = doc(db, `users/${userId}/games/${gameId}`);
+            const image = await getDoc(imageRef);
+            const docs = {
+                id: image.id,
+                ...image.data()
+            }
+
+            return docs;
         } catch (error) {
             console.error(error);
             throw error;
@@ -173,7 +193,7 @@ export const deleteCharacter = createAsyncThunk(
 
 const usersSlice = createSlice({
     name: 'users',
-    initialState: { users: [], games: [], images: [], characters: [] },
+    initialState: { users: [], games: [], game: [], images: [], characters: [] },
     extraReducers: (builder) => {
         builder
             .addCase(saveUser.fulfilled, (state, action) => {
@@ -198,6 +218,9 @@ const usersSlice = createSlice({
             .addCase(deleteCharacter.fulfilled, (state, action) => {
                 const deletedChar = action.payload;
                 state.characters = state.characters.filter((char) => char.name !== deletedChar);
+            })
+            .addCase(fetchGame.fulfilled, (state, action) => {
+                state.game = action.payload;
             })
     }
 })
