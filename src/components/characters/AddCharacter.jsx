@@ -25,6 +25,8 @@ export default function AddCharacter({ showModal, closeModal, imageId, gameId, u
     const handleCloseToast = () => setShowToast(false);
 
     const handleSubmit = () => {
+
+
         //upload data to neon console
         const data = {
             name,

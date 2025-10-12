@@ -27,9 +27,8 @@ export default function Characters() {
             .catch((error) => console.error(error));
 
         dispatch(fetchCharProfile({ userId, gameId: imgId }))
-    }, [characters, gameId, dispatch, userId, imgId])
 
-    // console.log(images);
+    }, [gameId, dispatch, userId, imgId, characters])
 
     return (
         <>

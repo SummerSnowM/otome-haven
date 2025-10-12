@@ -136,6 +136,7 @@ export const saveCharacter = createAsyncThunk(
         }
 
         //upload pfp to firebase db
+        console.log(userId, gameId);
         const gamesRef = collection(db, `users/${userId}/games/${gameId}/characters`);
         const newCharRef = doc(gamesRef);
         await setDoc(newCharRef, { name, imageUrl });

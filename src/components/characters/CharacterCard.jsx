@@ -25,6 +25,8 @@ export default function CharacterCard({ character, image, gameId, userId }) {
         dispatch(deleteCharacter({ userId, gameId, charId: image.id }));
     }
 
+    // console.log(image)
+
     return (
         <>
             <Card style={{ backgroundColor: '#FFF7F3', border: 'transparent' }} className='mt-3'>
