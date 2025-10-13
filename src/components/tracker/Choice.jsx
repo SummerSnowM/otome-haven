@@ -5,7 +5,7 @@ import { BASE_URL } from '../../App';
 import axios from 'axios';
 import Notification from '../Notification';
 
-export default function AddChoice({ charId, showModal, closeModal, isNewChap, chap }) {
+export default function Choice({ charId, showModal, closeModal, isNewChap, choice, chap }) {
     const [chapter, setChapter] = useState(0);
     const [description, setDescription] = useState("");
 
@@ -55,6 +55,21 @@ export default function AddChoice({ charId, showModal, closeModal, isNewChap, ch
         handleOpenToast();
     }
 
+    const handleUpdateDescription = () => {
+        axios.put(`${BASE_URL}/chapter/description/${choice}`, {description})
+            .then((response) => setMessage(response.data.message))
+            .catch((error) => console.error(error));
+
+        //reset value
+        setDescription("");
+
+        //close modal
+        closeModal();
+
+        //open toast
+        handleOpenToast();
+    }
+
     return (
         <>
             <Modal
@@ -64,12 +79,12 @@ export default function AddChoice({ charId, showModal, closeModal, isNewChap, ch
                 centered
             >
                 <Modal.Header style={{ backgroundColor: '#E6B2BA' }} closeButton>
-                    <Modal.Title>{isNewChap ? 'Add New Chapter' : 'Add New Description'}</Modal.Title>
+                    <Modal.Title>{isNewChap ? 'Add New Chapter' : choice != 0 ? 'Update Description' : 'Add New Description'}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form onSubmit={(e) => {
                         e.preventDefault();
-                        isNewChap ? handleSubmitChapter() : handleSubmitDescription();
+                        isNewChap ? handleSubmitChapter() : choice != 0 ? handleUpdateDescription() : handleSubmitDescription();
                     }}>
                         {isNewChap && (
                             <Form.Group>
@@ -93,7 +108,7 @@ export default function AddChoice({ charId, showModal, closeModal, isNewChap, ch
                                 required
                             />
                         </Form.Group>
-                        <Button type='submit' className='mt-3' style={{ backgroundColor: '#E6B2BA', border: 'transparent' }}>{isNewChap ? 'Add Chapter' : 'Add Description'}</Button>
+                        <Button type='submit' className='mt-3' style={{ backgroundColor: '#E6B2BA', border: 'transparent' }}>{isNewChap ? 'Add Chapter' : choice != 0 ? 'Update Description' : 'Add Description'}</Button>
                     </Form>
                 </Modal.Body>
             </Modal>

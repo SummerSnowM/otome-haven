@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { BASE_URL } from '../App';
 import axios from 'axios';
-import AddChoice from '../components/tracker/AddChoice';
+import Choice from '../components/tracker/Choice';
 import EndingsList from '../components/tracker/EndingsList';
 
 export default function CharacterTrack() {
@@ -78,7 +78,7 @@ export default function CharacterTrack() {
                 </Tabs>
             </Container>
 
-            <AddChoice showModal={showModal} closeModal={handleCloseModal} charId={id} isNewChap={true} />
+            <Choice showModal={showModal} closeModal={handleCloseModal} charId={id} isNewChap={true} />
         </>
     )
 }
