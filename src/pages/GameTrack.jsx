@@ -68,7 +68,7 @@ export default function GameTrack() {
                                     {characters.map((char, index) => {
                                         const currentChar = charImg.find(img => img.name === char.name);
                                         return (
-                                            <Col onClick={() => navigate(`/memories/${userId}/${gameId}/${currentChar?.id}/${char.id}`)} xs={6} sm={4} md={3} lg={2} key={index}>
+                                            <Col onClick={() => navigate(`/tracker/${char.id}`)} xs={6} sm={4} md={3} lg={2} key={index}>
                                                 <Image className='w-100 h-75' src={currentChar?.imageUrl} roundedCircle />
                                                 <p className='text-center mt-2'><strong>{char.name}</strong></p>
                                             </Col>

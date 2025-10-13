@@ -18,6 +18,7 @@ import CharacterProfile from './pages/CharacterProfile';
 import LandingPage from './pages/LandingPage';
 import Tracker from './pages/Tracker';
 import GameTrack from './pages/GameTrack';
+import CharacterTrack from './pages/CharacterTrack';
 
 export const BASE_URL = `https://ca18a0d5-cf20-4dc9-93fb-47752d961543-00-vme42hdhelap.sisko.replit.dev`;
 
@@ -67,13 +68,14 @@ export default function App() {
                         <Routes>
                             <Route path='/' element={<Layout />}>
                                 <Route path='login' element={<AuthPage />} />
-                                <Route path='landing' element={<LandingPage />} />
+                                <Route path='landing' index element={<LandingPage />} />
                                 <Route path='games' element={<Library />} />
                                 <Route path='memories' element={<Memories />} />
                                 <Route path='memories/:userId/:gameId/:id' element={<GameProfile />} />
                                 <Route path='memories/:userId/:gameId/:charId/:id' element={<CharacterProfile />} />
                                 <Route path='tracker' element={<Tracker />} />
                                 <Route path='tracker/:userId/:gameId/:id' element={<GameTrack />} />
+                                <Route path='tracker/:id' element={<CharacterTrack />} />
                                 <Route path='characters/:userId/:gameId/:imgId' element={<Characters />} />
                                 <Route path='news' element={<News />} />
                             </Route>
