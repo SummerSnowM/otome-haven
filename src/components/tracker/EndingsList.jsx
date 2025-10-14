@@ -1,4 +1,4 @@
-import { Table, Button } from 'react-bootstrap';
+import { Table, Button, Form } from 'react-bootstrap';
 import { useState } from 'react';
 
 import axios from 'axios';
@@ -26,12 +26,25 @@ export default function EndingsList({ endings, charId, type }) {
         setActiveChoice(0);
     };
 
+    const [ending, setEnding] = useState(0);
+    const [showForm, setShowForm] = useState(false);
+
     const handleDeleteChapter = (chapter, id) => {
         axios.delete(`${BASE_URL}/chapter/${id}/${chapter}`)
             .then((response) => setMessage(response.data.message))
             .catch((error) => console.error(error));
 
         handleOpenToast();
+    }
+
+    const handleUpdateEnding = () => {
+        console.log('yo');
+        axios.put(`${BASE_URL}/routes/${charId}/${ending}`)
+            .then((response) => setMessage(response.data.message))
+            .catch((error) => console.error(error));
+
+        handleOpenToast();
+        setShowForm(false);
     }
 
     // Group endings by chapter
@@ -43,8 +56,35 @@ export default function EndingsList({ endings, charId, type }) {
 
     return (
         <>
+            {type && type === 'default' && (
+                <>
+                    <Button onClick={() => showForm ? setShowForm(false) : setShowForm(true)} style={{ backgroundColor: '#E6B2BA', border: 'transparent' }}>{showForm ? 'Undo' : 'Confirm Route Ending'}</Button>
+                    {showForm && (
+
+                        <Form className='mt-3 rounded-2 p-3 w-75 mb-2' style={{ backgroundColor: '#FFF7F3', border: 'transparent' }} onSubmit={(e) => {
+                            e.preventDefault();
+                            handleUpdateEnding();
+                        }}>
+                            <Form.Group >
+                                <Form.Label>Select Ending Type</Form.Label>
+                                <Form.Select value={ending} onChange={e => setEnding(e.target.value)}>
+                                    <option></option>
+                                    <option value={1}>Best Ending</option>
+                                    <option value={2}>Bad Ending</option>
+                                    <option value={4}>Normal Ending</option>
+                                    <option value={3}>Best Friends Ending</option>
+                                    <option value={5}>Game Over / Death Ending</option>
+                                    <option value={6}>Unrequited Love Ending</option>
+                                </Form.Select>
+                            </Form.Group>
+                            <Button type='submit' className='mt-3' style={{ backgroundColor: '#FAD0C4', border: 'transparent', color: 'black' }}>Confirm Ending</Button>
+                        </Form>
+                    )}
+                </>
+            )}
+
             {endings && endings.length > 0 ? (
-                <Table bordered>
+                <Table className='mt-3' bordered>
                     <thead>
                         <tr>
                             <th style={{ width: '20%' }}>Chapter</th>

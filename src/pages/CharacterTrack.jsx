@@ -1,4 +1,4 @@
-import { Container, Button, Tab, Tabs } from 'react-bootstrap';
+import { Container, Button, Tab, Tabs} from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { BASE_URL } from '../App';
