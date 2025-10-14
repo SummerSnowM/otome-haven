@@ -81,7 +81,7 @@ export default function AuthPage() {
                             alt="Login wallpaper"
                         />
                     </div>
-                    <h1 style={{ fontFamily: 'Comic Sans MS' }}>Login</h1>
+                    <h1>Login</h1>
                     <Form.Group className='mt-3'>
                         <Form.Label>Email</Form.Label>
                         <Form.Control
@@ -132,7 +132,7 @@ export default function AuthPage() {
                     style={{ backgroundColor: '#E6B2BA' }}
                     closeButton
                 >
-                    <Modal.Title style={{ fontFamily: 'Comic Sans MS' }}>Register Account</Modal.Title>
+                    <Modal.Title>Register Account</Modal.Title>
                 </Modal.Header>
                 <Modal.Body
                     style={{ backgroundColor: '#FFF7F3' }}

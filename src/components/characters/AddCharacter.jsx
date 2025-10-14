@@ -19,6 +19,7 @@ export default function AddCharacter({ showModal, closeModal, imageId, gameId, u
 
     const [showToast, setShowToast] = useState(false);
     const [message, setMessage] = useState("");
+    const [status, setStatus] = useState("");
     const dispatch = useDispatch();
 
     const handleOpenToast = () => setShowToast(true);
@@ -33,12 +34,15 @@ export default function AddCharacter({ showModal, closeModal, imageId, gameId, u
             voice_actor: voiceActor,
             personality,
             review,
-            rating
+            rating,
         }
 
         axios.post(`${BASE_URL}/characters/${gameId}`, data)
-            .then((response) => setMessage(response.data.message))
-            .then(() => dispatch(saveCharacter({ userId, gameId: imageId, name, file, cgs })))         //upload data to firebase 
+            .then((response) => {
+                setMessage(response.data.message);
+                setStatus(response.data.status);
+            })
+            .then(() => status === 'success' && dispatch(saveCharacter({ userId, gameId: imageId, name, file, cgs })))         //upload data to firebase 
             .catch((error) => console.error(error))
             .finally(() => setLoading(true));
 

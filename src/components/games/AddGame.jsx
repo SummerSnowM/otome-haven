@@ -20,6 +20,7 @@ export default function AddGame({ showModal, closeModal, setLoading }) {
 
     const [showToast, setShowToast] = useState(false);
     const [message, setMessage] = useState("");
+    const [status, setStatus] = useState("");
 
     const dispatch = useDispatch();
     const { currentUser } = useContext(AuthContext);
@@ -39,8 +40,11 @@ export default function AddGame({ showModal, closeModal, setLoading }) {
         }
 
         axios.post(`${BASE_URL}/games/${currentUser?.uid}`, data)
-            .then((response) => setMessage(response.data.message))
-            .then(() => dispatch(saveGame({ userId: currentUser?.uid, name, file }))) //upload image to firebase storage
+            .then((response) => {
+                setMessage(response.data.message);
+                setStatus(response.data.status);
+            })
+            .then(() => status === 'success' && dispatch(saveGame({ userId: currentUser?.uid, name, file }))) //upload image to firebase storage
             .catch((error) => console.error(error))
             .finally(() => setLoading(true));
 

@@ -19,6 +19,7 @@ import LandingPage from './pages/LandingPage';
 import Tracker from './pages/Tracker';
 import GameTrack from './pages/GameTrack';
 import CharacterTrack from './pages/CharacterTrack';
+import ErrorPage from './pages/ErrorPage';
 
 export const BASE_URL = `https://ca18a0d5-cf20-4dc9-93fb-47752d961543-00-vme42hdhelap.sisko.replit.dev`;
 
@@ -31,7 +32,7 @@ function Layout() {
         <>
             <Navbar expand='md' style={{ backgroundColor: '#E6B2BA' }}>
                 <Container>
-                    <Navbar.Brand as={Link} to='/landing'><strong>Otome Haven</strong></Navbar.Brand>
+                    <Navbar.Brand as={Link} to='/'><strong>Otome Haven</strong></Navbar.Brand>
 
                     <Navbar.Toggle aria-controls='main-navbar' />
 
@@ -67,8 +68,8 @@ export default function App() {
                     <BrowserRouter>
                         <Routes>
                             <Route path='/' element={<Layout />}>
+                                <Route index element={<LandingPage />} />
                                 <Route path='login' element={<AuthPage />} />
-                                <Route path='landing' index element={<LandingPage />} />
                                 <Route path='games' element={<Library />} />
                                 <Route path='memories' element={<Memories />} />
                                 <Route path='memories/:userId/:gameId/:id' element={<GameProfile />} />
@@ -79,6 +80,7 @@ export default function App() {
                                 <Route path='characters/:userId/:gameId/:imgId' element={<Characters />} />
                                 <Route path='news' element={<News />} />
                             </Route>
+                            <Route path='*' element={<ErrorPage />} />
                         </Routes>
                     </BrowserRouter>
                 </Provider>
