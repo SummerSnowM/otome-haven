@@ -6,7 +6,7 @@ import { BASE_URL } from '../../App';
 import Choice from './Choice';
 import Notification from '../Notification';
 
-export default function EndingsList({ endings, charId, type }) {
+export default function EndingsList({ endings, charId, type, setLoading }) {
     const [activeChapter, setActiveChapter] = useState(null);
     const [activeChoice, setActiveChoice] = useState(0);
 
@@ -32,7 +32,8 @@ export default function EndingsList({ endings, charId, type }) {
     const handleDeleteChapter = (chapter, id) => {
         axios.delete(`${BASE_URL}/chapter/${id}/${chapter}`)
             .then((response) => setMessage(response.data.message))
-            .catch((error) => console.error(error));
+            .catch((error) => console.error(error))
+            .finally(() => setLoading(true));
 
         handleOpenToast();
     }
@@ -41,7 +42,8 @@ export default function EndingsList({ endings, charId, type }) {
         console.log('yo');
         axios.put(`${BASE_URL}/routes/${charId}/${ending}`)
             .then((response) => setMessage(response.data.message))
-            .catch((error) => console.error(error));
+            .catch((error) => console.error(error))
+            .finally(() => setLoading(true));
 
         handleOpenToast();
         setShowForm(false);
@@ -148,6 +150,7 @@ export default function EndingsList({ endings, charId, type }) {
                                             chap={chapter}
                                             charId={charId}
                                             choice={activeChoice}
+                                            setLoading={setLoading}
                                         />
                                     </td>
                                 </tr>

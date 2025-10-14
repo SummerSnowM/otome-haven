@@ -5,7 +5,7 @@ import { BASE_URL } from '../../App';
 import axios from 'axios';
 import Notification from '../Notification';
 
-export default function Choice({ charId, showModal, closeModal, isNewChap, choice, chap }) {
+export default function Choice({ charId, showModal, closeModal, isNewChap, choice, chap, setLoading }) {
     const [chapter, setChapter] = useState(0);
     const [description, setDescription] = useState("");
 
@@ -23,7 +23,8 @@ export default function Choice({ charId, showModal, closeModal, isNewChap, choic
 
         axios.post(`${BASE_URL}/chapter/${charId}`, data)
             .then((response) => setMessage(response.data.message))
-            .catch((error) => console.error(error));
+            .catch((error) => console.error(error))
+            .finally(() => setLoading(true));
 
         //reset values
         setChapter(0);
@@ -43,7 +44,8 @@ export default function Choice({ charId, showModal, closeModal, isNewChap, choic
         }
         axios.post(`${BASE_URL}/chapter/description/${charId}`, data)
             .then((response) => setMessage(response.data.message))
-            .catch((error) => console.error(error));
+            .catch((error) => console.error(error))
+            .finally(() => setLoading(true));
 
         //reset value
         setDescription("");
@@ -58,7 +60,8 @@ export default function Choice({ charId, showModal, closeModal, isNewChap, choic
     const handleUpdateDescription = () => {
         axios.put(`${BASE_URL}/chapter/description/${choice}`, {description})
             .then((response) => setMessage(response.data.message))
-            .catch((error) => console.error(error));
+            .catch((error) => console.error(error))
+            .finally(() => setLoading(true));
 
         //reset value
         setDescription("");

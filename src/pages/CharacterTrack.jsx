@@ -1,4 +1,4 @@
-import { Container, Button, Tab, Tabs} from 'react-bootstrap';
+import { Container, Button, Tab, Tabs } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { BASE_URL } from '../App';
@@ -42,8 +42,6 @@ export default function CharacterTrack() {
         }
     }, [loading, id]);
 
-    console.log(defaultEndings);
-
     return (
         <>
             <Container className='mt-4'>
@@ -55,30 +53,30 @@ export default function CharacterTrack() {
                     className='mt-5 mb-3 custom-tabs'
                 >
                     <Tab eventKey='default' title='Progress'>
-                        <EndingsList endings={defaultEndings} charId={id} type='default' />
+                        <EndingsList endings={defaultEndings} charId={id} type='default' setLoading={setLoading} />
                     </Tab>
                     <Tab eventKey='best' title='Best Ending'>
-                        <EndingsList endings={bestEndings} charId={id} />
+                        <EndingsList endings={bestEndings} charId={id} setLoading={setLoading} />
                     </Tab>
                     <Tab eventKey='bad' title='Bad Ending'>
-                        <EndingsList endings={badEndings} charId={id} />
+                        <EndingsList endings={badEndings} charId={id} setLoading={setLoading} />
                     </Tab>
                     <Tab eventKey='bff' title='Best Friends Ending'>
-                        <EndingsList endings={bestFriendEndings} charId={id} />
+                        <EndingsList endings={bestFriendEndings} charId={id} setLoading={setLoading} />
                     </Tab>
                     <Tab eventKey='normal' title='Normal Ending'>
-                        <EndingsList endings={normalEndings} charId={id} />
+                        <EndingsList endings={normalEndings} charId={id} setLoading={setLoading} />
                     </Tab>
                     <Tab eventKey='game-over' title='Game Over Ending'>
-                        <EndingsList endings={gameOverEndings} charId={id} />
+                        <EndingsList endings={gameOverEndings} charId={id} setLoading={setLoading} />
                     </Tab>
                     <Tab eventKey='unrequited' title='Unrequited Ending'>
-                        <EndingsList endings={unrequitedLoveEndings} charId={id} />
+                        <EndingsList endings={unrequitedLoveEndings} charId={id} setLoading={setLoading} />
                     </Tab>
                 </Tabs>
             </Container>
 
-            <Choice showModal={showModal} closeModal={handleCloseModal} charId={id} isNewChap={true} />
+            <Choice showModal={showModal} closeModal={handleCloseModal} charId={id} isNewChap={true} setLoading={setLoading} />
         </>
     )
 }
