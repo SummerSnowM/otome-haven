@@ -6,8 +6,9 @@ import { BASE_URL } from '../../App';
 import { deleteCharacter } from '../../features/usersSlice';
 
 import UpdateCharacter from './UpdateCharacter';
+import Notification from '../Notification';
 
-export default function CharacterCard({ character, image, gameId, userId }) {
+export default function CharacterCard({ character, image, gameId, userId, setLoading }) {
     const [showModal, setShowModal] = useState(false);
 
     const dispatch = useDispatch();
@@ -15,17 +16,26 @@ export default function CharacterCard({ character, image, gameId, userId }) {
     const handleOpenModal = () => setShowModal(true);
     const handleCloseModal = () => setShowModal(false);
 
+    const [message, setMessage] = useState("");
+    const [showToast, setShowToast] = useState(false);
+
+    const handleOpenToast = () => setShowToast(true);
+    const handleCloseToast = () => setShowToast(false);
+
     const handleDelete = () => {
         //delete data from neon console
         axios.delete(`${BASE_URL}/characters/${character.id}`)
-            .then((response) => console.log(response.data.message))
-            .catch((error) => console.error(error));
+            .then((response) => setMessage(response.data.message))
+            .catch((error) => console.error(error))
+            .finally(() => setLoading(true))
 
         //delete document from firebase
         dispatch(deleteCharacter({ userId, gameId, charId: image.id }));
+
+        //open notification
+        handleOpenToast();
     }
 
-    // console.log(image)
 
     return (
         <>
@@ -42,7 +52,8 @@ export default function CharacterCard({ character, image, gameId, userId }) {
                 </Card.Body>
             </Card>
 
-            <UpdateCharacter showModal={showModal} closeModal={handleCloseModal} character={character} />
+            <Notification message={message} closeToast={handleCloseToast} showToast={showToast} />
+            <UpdateCharacter showModal={showModal} closeModal={handleCloseModal} character={character} setLoading={setLoading} />
         </>
     )
 }

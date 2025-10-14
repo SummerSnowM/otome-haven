@@ -9,7 +9,7 @@ import { BASE_URL } from '../../App';
 
 import Notification from '../Notification';
 
-export default function AddGame({ showModal, closeModal }) {
+export default function AddGame({ showModal, closeModal, setLoading }) {
     const [name, setName] = useState("");
     const [developer, setDeveloper] = useState("");
     const [genre, setGenre] = useState("");
@@ -40,10 +40,9 @@ export default function AddGame({ showModal, closeModal }) {
 
         axios.post(`${BASE_URL}/games/${currentUser?.uid}`, data)
             .then((response) => setMessage(response.data.message))
-            .catch((error) => console.error(error));
-
-        //upload image to firebase storage
-        dispatch(saveGame({ userId: currentUser?.uid, name, file }))
+            .then(() => dispatch(saveGame({ userId: currentUser?.uid, name, file }))) //upload image to firebase storage
+            .catch((error) => console.error(error))
+            .finally(() => setLoading(true));
 
         //reset values
         setName("");

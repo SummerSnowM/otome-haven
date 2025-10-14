@@ -19,17 +19,20 @@ export default function Library() {
 
     const [showModal, setShowModal] = useState(false);
     const [games, setGames] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const handleOpenModal = () => setShowModal(true);
     const handleCloseModal = () => setShowModal(false);
 
     useEffect(() => {
-        axios.get(`${BASE_URL}/games/${currentUser?.uid}`)
-            .then((response) => setGames(response.data.data))
-            .catch((error) => console.error(error));
-
-        dispatch(fetchImage({ userId: currentUser?.uid }))
-    }, [games, currentUser, dispatch]);
+        if (loading) {
+            axios.get(`${BASE_URL}/games/${currentUser?.uid}`)
+                .then((response) => setGames(response.data.data))
+                .then(() => dispatch(fetchImage({ userId: currentUser?.uid })))
+                .catch((error) => console.error(error))
+                .finally(() => setLoading(false));
+        }
+    }, [loading, currentUser, dispatch]);
 
     return (
         <>
@@ -43,7 +46,7 @@ export default function Library() {
                             const image = images.find(img => img.name === game.name);
                             return (
                                 <Col key={index}>
-                                    <GameCard userId={currentUser?.uid} imageId={image?.id} game={game} imageUrl={image?.imageUrl} />
+                                    <GameCard userId={currentUser?.uid} imageId={image?.id} game={game} imageUrl={image?.imageUrl} setLoading={setLoading} />
                                 </Col>
                             )
                         })
@@ -51,7 +54,7 @@ export default function Library() {
                 </Row>
             </Container>
 
-            <AddGame showModal={showModal} closeModal={handleCloseModal} />
+            <AddGame showModal={showModal} closeModal={handleCloseModal} setLoading={setLoading} />
         </>
     )
 }

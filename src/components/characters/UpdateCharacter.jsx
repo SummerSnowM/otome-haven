@@ -6,7 +6,7 @@ import axios from 'axios';
 
 import Notification from '../Notification';
 
-export default function UpdateCharacter({ showModal, closeModal, character }) {
+export default function UpdateCharacter({ showModal, closeModal, character, setLoading }) {
     const [voiceActor, setVoiceActor] = useState(character.voice_actor);
     const [personality, setPersonality] = useState(character.personality);
     const [review, setReview] = useState(character.review);
@@ -27,7 +27,8 @@ export default function UpdateCharacter({ showModal, closeModal, character }) {
         }
         axios.put(`${BASE_URL}/characters/${character.id}`, data)
             .then((response) => setMessage(response.data.message))
-            .catch((error) => console.error(error));
+            .catch((error) => console.error(error))
+            .finally(() => setLoading(true));
 
         //close modal
         closeModal();

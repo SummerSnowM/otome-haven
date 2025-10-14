@@ -8,7 +8,7 @@ import { BASE_URL } from '../../App';
 
 import Notification from '../Notification';
 
-export default function AddCharacter({ showModal, closeModal, imageId, gameId, userId }) {
+export default function AddCharacter({ showModal, closeModal, imageId, gameId, userId, setLoading }) {
     const [name, setName] = useState("");
     const [voiceActor, setVoiceActor] = useState("");
     const [personality, setPersonality] = useState("");
@@ -38,10 +38,9 @@ export default function AddCharacter({ showModal, closeModal, imageId, gameId, u
 
         axios.post(`${BASE_URL}/characters/${gameId}`, data)
             .then((response) => setMessage(response.data.message))
-            .catch((error) => console.error(error));
-
-        //upload data to firebase 
-        dispatch(saveCharacter({ userId, gameId: imageId, name, file, cgs }));
+            .then(() => dispatch(saveCharacter({ userId, gameId: imageId, name, file, cgs })))         //upload data to firebase 
+            .catch((error) => console.error(error))
+            .finally(() => setLoading(true));
 
         //reset values
         setName("");

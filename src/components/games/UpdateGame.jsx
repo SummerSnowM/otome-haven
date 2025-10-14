@@ -6,7 +6,7 @@ import { BASE_URL } from '../../App';
 
 import Notification from '../Notification';
 
-export default function UpdateGame({ game, showModal, closeModal }) {
+export default function UpdateGame({ game, showModal, closeModal, setLoading }) {
     const [developer, setDeveloper] = useState(game.developer);
     const [genre, setGenre] = useState(game.genre);
     const [platform, setPlatform] = useState(game.platform);
@@ -30,7 +30,8 @@ export default function UpdateGame({ game, showModal, closeModal }) {
 
         axios.put(`${BASE_URL}/games/${game.id}`, data)
             .then((response) => setMessage(response.data.message))
-            .catch((error) => console.error(error));
+            .catch((error) => console.error(error))
+            .finally(() => setLoading(true));
 
         closeModal();
         handleOpenToast();

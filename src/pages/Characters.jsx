@@ -11,24 +11,28 @@ import CharacterCard from '../components/characters/CharacterCard';
 
 export default function Characters() {
     const { userId, gameId, imgId } = useParams();
+    const [loading, setLoading] = useState(true);
     const [characters, setCharacters] = useState([]);
     const images = useSelector((state) => state.users.characters);
 
     const [showModal, setShowModal] = useState(false);
 
-    const dispatch = useDispatch();
-
     const handleOpenModal = () => setShowModal(true);
     const handleCloseModal = () => setShowModal(false);
 
+    const dispatch = useDispatch();
+
+
+
     useEffect(() => {
-        axios.get(`${BASE_URL}/characters/${gameId}`)
-            .then((response) => setCharacters(response.data.data))
-            .catch((error) => console.error(error));
-
-        dispatch(fetchCharProfile({ userId, gameId: imgId }))
-
-    }, [gameId, dispatch, userId, imgId, characters])
+        if (loading) {
+            axios.get(`${BASE_URL}/characters/${gameId}`)
+                .then((response) => setCharacters(response.data.data))
+                .then(() => dispatch(fetchCharProfile({ userId, gameId: imgId })))
+                .catch((error) => console.error(error))
+                .finally(() => setLoading(false));
+        }
+    }, [gameId, dispatch, userId, imgId, loading])
 
     return (
         <>
@@ -42,7 +46,7 @@ export default function Characters() {
                             const image = images.find(img => img.name === char.name);
                             return (
                                 <Col key={index}>
-                                    <CharacterCard character={char} image={image} gameId={imgId} userId={userId} />
+                                    <CharacterCard character={char} image={image} gameId={imgId} userId={userId} setLoading={setLoading} />
                                 </Col>
                             )
                         })
@@ -50,7 +54,7 @@ export default function Characters() {
                 </Row>
             </Container>
 
-            <AddCharacter showModal={showModal} closeModal={handleCloseModal} imageId={imgId} gameId={gameId} userId={userId} />
+            <AddCharacter showModal={showModal} closeModal={handleCloseModal} imageId={imgId} gameId={gameId} userId={userId} setLoading={setLoading} />
         </>
     )
 }
