@@ -12,7 +12,7 @@ export default function CharacterProfile() {
 
     const charImage = useSelector((state) => state.users.character);
     const [character, setCharacter] = useState(null);
-    const cgs = useSelector((state) => state.users.images);
+    const cgs = useSelector((state) => state.users.cgs);
 
     const dispatch = useDispatch();
 
@@ -48,19 +48,19 @@ export default function CharacterProfile() {
                         </Row>
                         <hr />
                         <h3>Favorite Cgs</h3>
-                        {cgs && (
+                        {cgs ? (
                             <>
                                 <Row style={{ backgroundColor: '#FFF7F3' }} className='mt-3 p-3 rounded-3'>
                                     {cgs[0]?.urls.map((img, index) => {
                                         return (
-                                            <Col xs={1} sm={2} md={3} className='m-2' key={index}>
+                                            <Col xs={12} sm={6} md={4} lg={3} className='m-2' key={index}>
                                                 <Image src={img} className='w-100 h-100 rounded-2' style={{ maxWidth: '400px', maxHeight: '500px' }} fluid />
                                             </Col>
                                         )
                                     })}
                                 </Row>
                             </>
-                        )}
+                        ) : <p className='mt-3'>There are no cgs added for this character</p>}
                     </>
                 )}
 

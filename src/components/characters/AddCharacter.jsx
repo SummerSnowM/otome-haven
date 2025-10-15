@@ -37,6 +37,7 @@ export default function AddCharacter({ showModal, closeModal, imageId, gameId, u
             rating,
         }
 
+        console.log(userId, imageId, name, file, cgs);
         axios.post(`${BASE_URL}/characters/${gameId}`, data)
             .then((response) => {
                 setMessage(response.data.message);

@@ -62,7 +62,7 @@ export default function GameProfile() {
                         {/* view characters section */}
                         <Button onClick={() => showCharacters ? setShowCharacters(false) : setShowCharacters(true)} style={{ backgroundColor: '#E6B2BA', border: 'transparent' }}>{showCharacters ? 'Hide Characters' : 'View Characters'}</Button>
 
-                        {showCharacters && (
+                        {showCharacters && (characters ? (
                             <>
                                 <Row style={{ backgroundColor: '#FFF7F3' }} className='mt-3 p-3 rounded-3'>
                                     {characters.map((char, index) => {
@@ -76,7 +76,7 @@ export default function GameProfile() {
                                     })}
                                 </Row>
                             </>
-                        )}
+                        ) : <p className='mt-3'>There are no characters added yet</p>)}
                     </>
                 )}
             </Container>

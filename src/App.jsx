@@ -21,7 +21,7 @@ import GameTrack from './pages/GameTrack';
 import CharacterTrack from './pages/CharacterTrack';
 import ErrorPage from './pages/ErrorPage';
 
-export const BASE_URL = `https://ca18a0d5-cf20-4dc9-93fb-47752d961543-00-vme42hdhelap.sisko.replit.dev`;
+export const BASE_URL = `https://f0ad1990-65fa-4e35-9ef6-ab7678471771-00-3w49yiqer77u1.pike.replit.dev`;
 
 function Layout() {
     const { currentUser } = useContext(AuthContext);

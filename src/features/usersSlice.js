@@ -42,6 +42,7 @@ export const saveGame = createAsyncThunk(
     'games/saveGame',
     async ({ userId, file, name }) => {
         let imageUrl = "";
+        console.log(userId, file, name)
         const imageRef = ref(storage, `games/${file.name}`);
         const response = await uploadBytes(imageRef, file);
         imageUrl = await getDownloadURL(response.ref);
@@ -83,6 +84,13 @@ export const deleteGame = createAsyncThunk(
     'games/deleteGame',
     async ({ userId, imageId }) => {
         try {
+            //delete characters folder
+            const charRef = collection(db, `users/${userId}/games/${imageId}/characters`);
+            const snapshot = await getDocs(charRef);
+            for (const char of snapshot.docs) {
+                await deleteDoc(char.ref);
+            }
+
             const gameRef = doc(db, `users/${userId}/games/${imageId}`);
             await deleteDoc(gameRef);
             return name;
@@ -120,6 +128,7 @@ export const fetchGame = createAsyncThunk(
 export const saveCharacter = createAsyncThunk(
     'characters/saveCharacter',
     async ({ userId, gameId, name, file, cgs }) => {
+        console.log(userId, gameId, name, file, cgs);
         //upload pfp to firestorage
         let imageUrl = "";
         const pfpRef = ref(storage, `characters/${file.name}`);
@@ -230,7 +239,7 @@ export const deleteCharacter = createAsyncThunk(
 
 const usersSlice = createSlice({
     name: 'users',
-    initialState: { users: [], games: [], game: [], images: [], characters: [], character: [] },
+    initialState: { users: [], games: [], game: [], images: [], characters: [], character: [], cgs: [] },
     extraReducers: (builder) => {
         builder
             .addCase(saveUser.fulfilled, (state, action) => {
@@ -263,7 +272,7 @@ const usersSlice = createSlice({
                 state.character = action.payload;
             })
             .addCase(fetchCgs.fulfilled, (state, action) => {
-                state.images = action.payload;
+                state.cgs = action.payload;
             })
     }
 })

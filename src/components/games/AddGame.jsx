@@ -39,6 +39,7 @@ export default function AddGame({ showModal, closeModal, setLoading }) {
             rating
         }
 
+        console.log(currentUser?.uid, name, file);
         axios.post(`${BASE_URL}/games/${currentUser?.uid}`, data)
             .then((response) => {
                 setMessage(response.data.message);
