@@ -22,7 +22,7 @@ import GameTrack from './pages/GameTrack';
 import CharacterTrack from './pages/CharacterTrack';
 import ErrorPage from './pages/ErrorPage';
 
-export const BASE_URL = `https://f0ad1990-65fa-4e35-9ef6-ab7678471771-00-3w49yiqer77u1.pike.replit.dev`;
+export const BASE_URL = `https://otome-haven-27wyd7r46-summers-projects-c0d99262.vercel.app`;
 
 function Layout() {
     const { currentUser } = useContext(AuthContext);
