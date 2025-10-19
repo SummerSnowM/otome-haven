@@ -20,7 +20,6 @@ export default function AddGame({ showModal, closeModal, setLoading }) {
 
     const [showToast, setShowToast] = useState(false);
     const [message, setMessage] = useState("");
-    const [status, setStatus] = useState("");
 
     const dispatch = useDispatch();
     const { currentUser } = useContext(AuthContext);
@@ -28,7 +27,7 @@ export default function AddGame({ showModal, closeModal, setLoading }) {
     const handleOpenToast = () => setShowToast(true);
     const handleCloseToast = () => setShowToast(false);
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         //post data to neon console
         const data = {
             name,
@@ -39,15 +38,10 @@ export default function AddGame({ showModal, closeModal, setLoading }) {
             rating
         }
 
-        console.log(currentUser?.uid, name, file);
-        axios.post(`${BASE_URL}/games/${currentUser?.uid}`, data)
-            .then((response) => {
-                setMessage(response.data.message);
-                setStatus(response.data.status);
-            })
-            .then(() => status === 'success' && dispatch(saveGame({ userId: currentUser?.uid, name, file }))) //upload image to firebase storage
-            .catch((error) => console.error(error))
-            .finally(() => setLoading(true));
+        const firebaseData = {
+            name,
+            file
+        }
 
         //reset values
         setName("");
@@ -61,8 +55,20 @@ export default function AddGame({ showModal, closeModal, setLoading }) {
         //close modal
         closeModal();
 
-        //open notification
-        handleOpenToast();
+        try {
+            const response = await axios.post(`${BASE_URL}/games/${currentUser?.uid}`, data);
+            setMessage(response.data.message);
+
+            if (response.data.status === 'success') {
+                dispatch(saveGame({ userId: currentUser?.uid, name: firebaseData.name, file: firebaseData.file }));
+            }
+            //open notification
+            handleOpenToast();
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setLoading(true);
+        }
     }
 
     return (
@@ -150,6 +156,7 @@ export default function AddGame({ showModal, closeModal, setLoading }) {
                         <Form.Group>
                             <Form.Label>Game Profile Image</Form.Label>
                             <Form.Control
+                                accept='.jpg, .jpeg, .png'
                                 type='file'
                                 onChange={e => setFile(e.target.files[0])}
                                 required

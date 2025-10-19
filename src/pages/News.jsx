@@ -43,13 +43,12 @@ export default function News() {
         }
     }, [loading, VNDB_URL])
 
-    console.log(latestGames);
     return (
         <>
             <Container className='mt-4'>
                 <h1 className='text-center' style={{ color: '#E6B2BA' }}>Latest Otomate Games</h1>
                 <Row>
-                    {latestGames.results && latestGames.results.length > 0 ? (
+                    {latestGames.results && (latestGames.results.length > 0 ? (
                         <>
                             {latestGames.results.map((game, index) => {
                                 return (
@@ -59,7 +58,7 @@ export default function News() {
                                 )
                             })}
                         </>
-                    ) : <p className='mt-3'>There's no new games releasing recently...</p>}
+                    ) : <p className='mt-3'>Loading...</p>)}
                 </Row>
             </Container>
         </>

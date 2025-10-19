@@ -46,11 +46,13 @@ export const saveGame = createAsyncThunk(
         const imageRef = ref(storage, `games/${file.name}`);
         const response = await uploadBytes(imageRef, file);
         imageUrl = await getDownloadURL(response.ref);
+        console.log(imageUrl)
 
         const gamesRef = collection(db, `users/${userId}/games`);
         const newGameRef = doc(gamesRef);
         await setDoc(newGameRef, { name, imageUrl });
         const newDoc = await getDoc(newGameRef);
+        console.log(newDoc);
 
         const game = {
             id: newDoc.id,
@@ -131,18 +133,20 @@ export const saveCharacter = createAsyncThunk(
         console.log(userId, gameId, name, file, cgs);
         //upload pfp to firestorage
         let imageUrl = "";
-        const pfpRef = ref(storage, `characters/${file.name}`);
+        const pfpRef = ref(storage, `characters/${Date.now()}_${file.name}`);
         const response = await uploadBytes(pfpRef, file);
         imageUrl = await getDownloadURL(response.ref);
+        console.log(imageUrl)
 
         //upload cgs to firestore
         const urls = [];
         for (const cg of cgs) {
-            const cgsRef = ref(storage, `cgs/${cg.name}`);
+            const cgsRef = ref(storage, `cgs/${Date.now()}_${cg.name}`);
             const result = await uploadBytes(cgsRef, cg);
             let imgUrl = await getDownloadURL(result.ref);
             urls.push(imgUrl);
         }
+        console.log(urls);
 
         //upload pfp to firebase db
         console.log(userId, gameId);
@@ -150,6 +154,7 @@ export const saveCharacter = createAsyncThunk(
         const newCharRef = doc(gamesRef);
         await setDoc(newCharRef, { name, imageUrl });
         const newChar = await getDoc(newCharRef);
+        console.log('hello');
 
         const char = {
             id: newChar.id,

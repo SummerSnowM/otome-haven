@@ -19,13 +19,12 @@ export default function AddCharacter({ showModal, closeModal, imageId, gameId, u
 
     const [showToast, setShowToast] = useState(false);
     const [message, setMessage] = useState("");
-    const [status, setStatus] = useState("");
     const dispatch = useDispatch();
 
     const handleOpenToast = () => setShowToast(true);
     const handleCloseToast = () => setShowToast(false);
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
 
 
         //upload data to neon console
@@ -37,15 +36,11 @@ export default function AddCharacter({ showModal, closeModal, imageId, gameId, u
             rating,
         }
 
-        console.log(userId, imageId, name, file, cgs);
-        axios.post(`${BASE_URL}/characters/${gameId}`, data)
-            .then((response) => {
-                setMessage(response.data.message);
-                setStatus(response.data.status);
-            })
-            .then(() => status === 'success' && dispatch(saveCharacter({ userId, gameId: imageId, name, file, cgs })))         //upload data to firebase 
-            .catch((error) => console.error(error))
-            .finally(() => setLoading(true));
+        const firebaseData = {
+            name,
+            file,
+            cgs
+        }
 
         //reset values
         setName("");
@@ -59,8 +54,21 @@ export default function AddCharacter({ showModal, closeModal, imageId, gameId, u
         //close the form
         closeModal();
 
-        //open notification
-        handleOpenToast();
+        try {
+            const response = await axios.post(`${BASE_URL}/characters/${gameId}`, data);
+            setMessage(response.data.message);
+
+            if (response.data.status === 'success') {
+                dispatch(saveCharacter({ userId, gameId: imageId, name: firebaseData.name, file: firebaseData.file, cgs: firebaseData.cgs }));
+            }
+            //open notification
+            handleOpenToast();
+
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setLoading(true);
+        }
     }
 
 
@@ -142,6 +150,7 @@ export default function AddCharacter({ showModal, closeModal, imageId, gameId, u
                         <Form.Group>
                             <Form.Label>Character Profile Image</Form.Label>
                             <Form.Control
+                                accept='.jpg, .jpeg, .png'
                                 type='file'
                                 onChange={e => setFile(e.target.files[0])}
                             />
@@ -150,6 +159,7 @@ export default function AddCharacter({ showModal, closeModal, imageId, gameId, u
                         <Form.Group>
                             <Form.Label>Favorite Cgs</Form.Label>
                             <Form.Control
+                                accept='.jpg, .jpeg, .png'
                                 type='file'
                                 onChange={e => setCgs(e.target.files)}
                                 multiple
