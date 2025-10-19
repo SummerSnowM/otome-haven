@@ -63,6 +63,7 @@ export default function AddCharacter({ showModal, closeModal, imageId, gameId, u
         handleOpenToast();
     }
 
+
     return (
         <>
             <Modal
@@ -80,8 +81,9 @@ export default function AddCharacter({ showModal, closeModal, imageId, gameId, u
                         handleSubmit();
                     }}>
                         <Form.Group>
-                            <Form.Label>Character Name</Form.Label>
+                            <Form.Label htmlFor="charName">Character Name</Form.Label>
                             <Form.Control
+                                id="charName"
                                 type='text'
                                 value={name}
                                 onChange={e => setName(e.target.value)}
@@ -90,8 +92,9 @@ export default function AddCharacter({ showModal, closeModal, imageId, gameId, u
                         </Form.Group>
 
                         <Form.Group >
-                            <Form.Label>Voice Actor</Form.Label>
+                            <Form.Label htmlFor="voiceActor">Voice Actor</Form.Label>
                             <Form.Control
+                                id="voiceActor"
                                 type='text'
                                 value={voiceActor}
                                 onChange={e => setVoiceActor(e.target.value)}
@@ -100,8 +103,9 @@ export default function AddCharacter({ showModal, closeModal, imageId, gameId, u
                         </Form.Group>
 
                         <Form.Group>
-                            <Form.Label>Personality</Form.Label>
+                            <Form.Label htmlFor="personality">Personality</Form.Label>
                             <Form.Control
+                                id="personality"
                                 type='text'
                                 value={personality}
                                 onChange={e => setPersonality(e.target.value)}
@@ -110,8 +114,9 @@ export default function AddCharacter({ showModal, closeModal, imageId, gameId, u
                         </Form.Group>
 
                         <Form.Group >
-                            <Form.Label>Your Review / Opinion:</Form.Label>
+                            <Form.Label htmlFor="review">Your Review / Opinion:</Form.Label>
                             <Form.Control
+                                id="review"
                                 as='textarea'
                                 rows={5}
                                 value={review}
@@ -121,8 +126,9 @@ export default function AddCharacter({ showModal, closeModal, imageId, gameId, u
                         </Form.Group>
 
                         <Form.Group>
-                            <Form.Label>Rating</Form.Label>
+                            <Form.Label htmlFor="rating">Rating</Form.Label>
                             <Form.Control
+                                id="rating"
                                 type='number'
                                 max={5}
                                 min={1}

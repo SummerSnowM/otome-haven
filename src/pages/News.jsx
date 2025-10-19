@@ -47,7 +47,7 @@ export default function News() {
     return (
         <>
             <Container className='mt-4'>
-                <h1 className='text-center'>Latest Otomate Games</h1>
+                <h1 className='text-center' style={{ color: '#E6B2BA' }}>Latest Otomate Games</h1>
                 <Row>
                     {latestGames.results && latestGames.results.length > 0 ? (
                         <>
