@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../components/AuthProvider'
 
 import Notification from '../components/Notification';
+import loginWallpaper from '../assets/authpage-wallpaper.jpg'
 
 export default function AuthPage() {
     const [username, setUsername] = useState("");
@@ -42,7 +43,7 @@ export default function AuthPage() {
                 password,
             );
             console.log(res.user);
-            await dispatch(saveUser({ userId: res.user.uid, username})).unwrap();
+            await dispatch(saveUser({ userId: res.user.uid, username })).unwrap();
         } catch (error) {
             console.error(error);
             setMessage("Email has been taken");
@@ -75,7 +76,7 @@ export default function AuthPage() {
                 >
                     <div className="ratio ratio-21x9 overflow-hidden rounded-4 mb-2">
                         <Image
-                            src="src/assets/authpage-wallpaper.jpg"
+                            src={loginWallpaper}
                             className="img-fluid w-100 h-100 object-fit-cover"
                             alt="Login wallpaper"
                         />
