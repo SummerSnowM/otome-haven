@@ -8,12 +8,12 @@ import { getFirestore } from 'firebase/firestore'
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyAEvcYDgdqaRns74Bwx7_D4kSMLRWoftCY",
-    authDomain: "otome-haven.firebaseapp.com",
-    projectId: "otome-haven",
-    storageBucket: "otome-haven.firebasestorage.app",
-    messagingSenderId: "339089905509",
-    appId: "1:339089905509:web:65d389678d77b00af2738c"
+    apiKey: import.meta.env.VITE_API_KEY,
+    authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_MESSAGING_SENDER_ID,
+    messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_APP_ID
 };
 
 // Initialize Firebase
