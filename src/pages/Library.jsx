@@ -6,6 +6,7 @@ import axios from 'axios';
 import { fetchImage } from '../features/usersSlice';
 import { BASE_URL } from '../App';
 import { AuthContext } from '../components/AuthProvider';
+import { Navigate } from 'react-router-dom';
 
 import AddGame from '../components/games/AddGame';
 import GameCard from '../components/games/GameCard';
@@ -34,6 +35,7 @@ export default function Library() {
         }
     }, [loading, currentUser, dispatch]);
 
+    if (!currentUser) return <Navigate to='/login' replace />
     return (
         <>
             <Container className='mt-4'>

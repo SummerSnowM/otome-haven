@@ -33,6 +33,27 @@ export const saveUser = createAsyncThunk(
     }
 )
 
+//fetch user
+export const fetchUser = createAsyncThunk(
+    'users/fetchUser',
+    async ({ userId }) => {
+        try {
+            const userRef = collection(db, `users/${userId}/profile`);
+            const user = await getDocs(userRef);
+
+            const docs = user.docs.map((profile) => ({
+                id: profile.id,
+                ...profile.data(),
+            }))
+
+            return docs;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+)
+
 //-----------------------------
 //           Games
 //-----------------------------
@@ -248,6 +269,9 @@ const usersSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(saveUser.fulfilled, (state, action) => {
+                state.users = action.payload;
+            })
+            .addCase(fetchUser.fulfilled, (state, action) => {
                 state.users = action.payload;
             })
             .addCase(saveGame.fulfilled, (state, action) => {

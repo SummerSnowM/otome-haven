@@ -1,7 +1,7 @@
 import { Container, Row, Col } from 'react-bootstrap';
 import { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import { BASE_URL } from "../App";
 import { AuthContext } from "../components/AuthProvider";
 import { fetchImage } from '../features/usersSlice';
@@ -26,6 +26,7 @@ export default function Memories() {
         dispatch(fetchImage({ userId: currentUser?.uid }));
     }, [currentUser, dispatch])
 
+    if (!currentUser) return <Navigate to='/login' replace />
     return (
         <>
             <Container className='mt-4'>

@@ -1,10 +1,13 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { Container, Row, Col } from 'react-bootstrap';
+import { Navigate } from "react-router-dom";
 import axios from 'axios';
 
 import LatestGame from "../components/news/LatestGame";
+import { AuthContext } from "../components/AuthProvider";
 
 export default function News() {
+    const { currentUser } = useContext(AuthContext);
     const [latestGames, setLatestGames] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -43,6 +46,7 @@ export default function News() {
         }
     }, [loading, VNDB_URL])
 
+    if (!currentUser) return <Navigate to='/login' replace />
     return (
         <>
             <Container className='mt-4'>

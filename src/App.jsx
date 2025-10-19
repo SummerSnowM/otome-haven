@@ -1,12 +1,13 @@
-import { Navbar, Container, Nav } from 'react-bootstrap';
+import { Navbar, Container, Nav, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Routes, Route, BrowserRouter, Link, Outlet } from 'react-router-dom';
-import { useContext } from 'react';
-import { Provider } from 'react-redux';
+import { useContext, useEffect } from 'react';
+import { Provider, useDispatch, useSelector } from 'react-redux';
 import store from './store'
 import { AuthProvider } from './components/AuthProvider';
 import { AuthContext } from './components/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 import { getAuth } from 'firebase/auth'
+import { fetchUser } from './features/usersSlice';
 
 import AuthPage from './pages/AuthPage';
 import News from './pages/News';
@@ -20,6 +21,7 @@ import Tracker from './pages/Tracker';
 import GameTrack from './pages/GameTrack';
 import CharacterTrack from './pages/CharacterTrack';
 import ErrorPage from './pages/ErrorPage';
+import blankUser from './assets/blank-user.jpg';
 
 export const BASE_URL = `https://f0ad1990-65fa-4e35-9ef6-ab7678471771-00-3w49yiqer77u1.pike.replit.dev`;
 
@@ -27,6 +29,16 @@ function Layout() {
     const { currentUser } = useContext(AuthContext);
     const navigate = useNavigate();
     const auth = getAuth();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (currentUser?.uid) {
+            dispatch(fetchUser({ userId: currentUser.uid }));
+        }
+    }, [currentUser?.uid, dispatch]);
+
+    const users = useSelector((state) => state.users.users);
+    console.log(users);
 
     return (
         <>
@@ -42,15 +54,35 @@ function Layout() {
                             <Nav.Link as={Link} to='/memories'><strong>Memories</strong></Nav.Link>
                             <Nav.Link as={Link} to='/games'><strong>Library</strong></Nav.Link>
                             <Nav.Link as={Link} to='/tracker'><strong>Tracker</strong></Nav.Link>
-                            <Nav.Link onClick={() => {
-                                if (currentUser) {
-                                    auth.signOut()
-                                        .then(() => navigate('/login'));
-                                } else {
-                                    navigate('/login');
+                            <OverlayTrigger
+                                placement="bottom"
+                                overlay={
+                                    currentUser && users ? (
+                                        <Tooltip id="logout-tooltip">Logout</Tooltip>
+                                    ) : (
+                                        <></>
+                                    )
                                 }
-                            }}
-                            ><strong>{currentUser ? 'Logout' : 'Login'}</strong></Nav.Link>
+                            >
+                                <Nav.Link
+                                    onClick={() => {
+                                        if (currentUser) {
+                                            auth.signOut().then(() => navigate('/login'));
+                                        } else {
+                                            navigate('/login');
+                                        }
+                                    }}
+                                >
+                                    <img
+                                        src={currentUser && users ? users[0]?.imageUrl : blankUser}
+                                        alt="User Avatar"
+                                        className="rounded-circle me-2 img-fluid"
+                                        width="30"
+                                        height="30"
+                                    />
+                                    <strong>{currentUser && users ? `${users[0]?.username}` : 'Login'}</strong>
+                                </Nav.Link>
+                            </OverlayTrigger>
                         </Nav>
                     </Navbar.Collapse>
                 </Container>

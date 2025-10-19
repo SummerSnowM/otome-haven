@@ -33,7 +33,6 @@ export default function Characters() {
                 .finally(() => setLoading(false));
         }
     }, [gameId, dispatch, userId, imgId, loading])
-
     return (
         <>
             <Container className='mt-4'>
