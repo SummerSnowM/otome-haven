@@ -17,7 +17,6 @@ export default function AuthPage() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
-    const [file, setFile] = useState(null);
 
     const [showModal, setShowModal] = useState(false);
     const [showToast, setShowToast] = useState(false);
@@ -43,7 +42,7 @@ export default function AuthPage() {
                 password,
             );
             console.log(res.user);
-            dispatch(saveUser({ userId: res.user.uid, username, file }));
+            await dispatch(saveUser({ userId: res.user.uid, username})).unwrap();
         } catch (error) {
             console.error(error);
             setMessage("Email has been taken");
@@ -114,7 +113,7 @@ export default function AuthPage() {
                 </Form>
 
                 <Button
-                    className='mt-3 rounded-5 w-100'
+                    className='mt-3 rounded-5 w-100 mb-3'
                     onClick={() => setShowModal(true)}
                     style={{ backgroundColor: '#E6B2BA', borderColor: 'transparent' }}
                 >
@@ -123,7 +122,7 @@ export default function AuthPage() {
             </Container>
 
             <Modal
-
+                centered
                 show={showModal}
                 onHide={() => setShowModal(false)}
                 animation={true}
@@ -167,15 +166,6 @@ export default function AuthPage() {
                                 onChange={e => setPassword(e.target.value)}
                                 type='password'
                                 placeholder='Enter password here'
-                                required
-                            />
-                        </Form.Group>
-
-                        <Form.Group className='mt-3'>
-                            <Form.Label>Profile Image</Form.Label>
-                            <Form.Control
-                                onChange={e => setFile(e.target.files[0])}
-                                type='file'
                                 required
                             />
                         </Form.Group>

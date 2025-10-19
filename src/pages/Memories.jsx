@@ -30,6 +30,7 @@ export default function Memories() {
     return (
         <>
             <Container className='mt-4'>
+                <h1 className='text-center' style={{ color: '#E6B2BA' }}>Memories</h1>
                 <Row xs={1} sm={2} md={3} lg={4}>
                     {games ? games.map((game, index) => {
                         const image = images.find(img => img.name === game.name);

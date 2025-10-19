@@ -39,6 +39,7 @@ export default function Library() {
     return (
         <>
             <Container className='mt-4'>
+                <h1 className='text-center mb-2' style={{ color: '#E6B2BA' }}>Otome Library</h1>
                 <Button onClick={handleOpenModal} style={{ backgroundColor: '#E6B2BA', border: 'transparent' }}>Register New Game</Button>
                 <br />
                 <Row xs={1} sm={1} md={2} lg={3}>

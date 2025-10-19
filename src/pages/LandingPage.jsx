@@ -4,7 +4,7 @@ import landing from '../assets/landing.jpg'
 export default function LandingPage() {
     return (
         <>
-            <Container className='mt-5'>
+            <Container className='mt-5 mb-5'>
                 <h1 style={{ color: '#E6B2BA' }} className='text-center'>Welcome to Otome Haven</h1>
                 <br />
                 <Row className='w-100'>

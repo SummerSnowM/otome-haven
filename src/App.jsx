@@ -21,7 +21,6 @@ import Tracker from './pages/Tracker';
 import GameTrack from './pages/GameTrack';
 import CharacterTrack from './pages/CharacterTrack';
 import ErrorPage from './pages/ErrorPage';
-import blankUser from './assets/blank-user.jpg';
 
 export const BASE_URL = `https://f0ad1990-65fa-4e35-9ef6-ab7678471771-00-3w49yiqer77u1.pike.replit.dev`;
 
@@ -30,14 +29,14 @@ function Layout() {
     const navigate = useNavigate();
     const auth = getAuth();
     const dispatch = useDispatch();
+    const users = useSelector((state) => state.users.users);
 
     useEffect(() => {
         if (currentUser?.uid) {
-            dispatch(fetchUser({ userId: currentUser.uid }));
+            dispatch(fetchUser({ userId: currentUser?.uid }));
         }
-    }, [currentUser?.uid, dispatch]);
+    }, [currentUser, dispatch]);
 
-    const users = useSelector((state) => state.users.users);
     console.log(users);
 
     return (
@@ -73,14 +72,7 @@ function Layout() {
                                         }
                                     }}
                                 >
-                                    <img
-                                        src={currentUser && users ? users[0]?.imageUrl : blankUser}
-                                        alt="User Avatar"
-                                        className="rounded-circle me-2 img-fluid"
-                                        width="30"
-                                        height="30"
-                                    />
-                                    <strong>{currentUser && users ? `${users[0]?.username}` : 'Login'}</strong>
+                                    <strong>{currentUser ? (Array.isArray(users) ? `${users[0]?.username}` : users?.username) : 'Login'}</strong>
                                 </Nav.Link>
                             </OverlayTrigger>
                         </Nav>

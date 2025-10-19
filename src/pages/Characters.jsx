@@ -36,7 +36,7 @@ export default function Characters() {
     return (
         <>
             <Container className='mt-4'>
-                <h2>Characters</h2>
+                <h1 className='text-center' style={{ color: '#E6B2BA' }}>Characters</h1>
                 <hr />
                 <Button onClick={handleOpenModal} style={{ backgroundColor: '#E6B2BA', border: 'transparent' }}>Add Character here</Button>
                 <Row xs={1} sm={2} md={3} lg={4}>

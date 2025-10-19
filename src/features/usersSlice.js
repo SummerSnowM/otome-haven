@@ -9,16 +9,12 @@ import { collection, doc, getDoc, getDocs, setDoc, deleteDoc } from 'firebase/fi
 //save username and user pfp 
 export const saveUser = createAsyncThunk(
     'users/saveUser',
-    async ({ userId, username, file }) => {
+    async ({ userId, username}) => {
         try {
-            let imageUrl = "";
-            const imageRef = ref(storage, `users/${file}`);
-            const response = await uploadBytes(imageRef, file);
-            imageUrl = await getDownloadURL(response.ref);
 
             const usersRef = collection(db, `users/${userId}/profile`);
             const newUserRef = doc(usersRef);
-            await setDoc(newUserRef, { username, imageUrl });
+            await setDoc(newUserRef, { username});
             const newDoc = await getDoc(newUserRef);
 
             const user = {
@@ -45,7 +41,7 @@ export const fetchUser = createAsyncThunk(
                 id: profile.id,
                 ...profile.data(),
             }))
-
+            
             return docs;
         } catch (error) {
             console.error(error);
@@ -272,7 +268,7 @@ const usersSlice = createSlice({
                 state.users = action.payload;
             })
             .addCase(fetchUser.fulfilled, (state, action) => {
-                state.users = action.payload;
+                state.users = action.payload
             })
             .addCase(saveGame.fulfilled, (state, action) => {
                 state.games.push(action.payload);

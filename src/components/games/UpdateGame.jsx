@@ -103,7 +103,7 @@ export default function UpdateGame({ game, showModal, closeModal, setLoading }) 
                                 onChange={e => setRating(e.target.value)}
                                 min={0.5}
                                 max={5}
-                                step={0.5}
+                                step={0.1}
                                 required
                             />
                         </Form.Group>
