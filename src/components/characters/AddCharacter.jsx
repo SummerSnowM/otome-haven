@@ -132,7 +132,7 @@ export default function AddCharacter({ showModal, closeModal, imageId, gameId, u
                                 type='number'
                                 max={5}
                                 min={1}
-                                step={0.5}
+                                step={0.1}
                                 value={rating}
                                 onChange={e => setRating(e.target.value)}
                                 required
