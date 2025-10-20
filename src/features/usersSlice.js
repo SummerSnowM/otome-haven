@@ -60,8 +60,7 @@ export const saveGame = createAsyncThunk(
     async ({ userId, file, name }) => {
         let imageUrl = "";
         console.log(userId, file, name)
-        const cleanFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-        const imageRef = ref(storage, `games/${cleanFileName}`);
+        const imageRef = ref(storage, `games/${file.name}`);
         const response = await uploadBytes(imageRef, file);
         imageUrl = await getDownloadURL(response.ref);
         console.log(imageUrl)
