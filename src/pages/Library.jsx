@@ -1,4 +1,4 @@
-import { Container, Button, Row, Col } from 'react-bootstrap'
+import { Container, Button, Row, Col, Spinner } from 'react-bootstrap'
 import { useState, useEffect, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -42,19 +42,24 @@ export default function Library() {
                 <h1 className='text-center mb-2' style={{ color: '#E6B2BA' }}>Otome Library</h1>
                 <Button onClick={handleOpenModal} style={{ backgroundColor: '#E6B2BA', border: 'transparent' }}>Register New Game</Button>
                 <br />
-                <Row xs={1} sm={1} md={2} lg={3}>
-                    {games ? (
-                        games.map((game, index) => {
-                            //pinpoint the exact image url for the current game
-                            const image = images.find(img => img.name === game.name);
-                            return (
-                                <Col key={index}>
-                                    <GameCard userId={currentUser?.uid} imageId={image?.id} game={game} imageUrl={image?.imageUrl} setLoading={setLoading} />
-                                </Col>
-                            )
-                        })
-                    ) : <p className='mt-3'>No games registered yet</p>}
-                </Row>
+                {!loading ? (
+                    <Row xs={1} sm={1} md={2} lg={3}>
+                        {games ? (
+                            games.map((game, index) => {
+                                //pinpoint the exact image url for the current game
+                                const image = images.find(img => img.name === game.name);
+                                return (
+                                    <Col key={index}>
+                                        <GameCard userId={currentUser?.uid} imageId={image?.id} game={game} imageUrl={image?.imageUrl} setLoading={setLoading} />
+                                    </Col>
+                                )
+                            })
+                        ) : <p className='mt-3'>No games registered yet</p>}
+                    </Row>
+                ) : (
+                    <Spinner className='mt-3' style={{ color: '#E6B2BA' }} animation="border" />
+                )}
+
             </Container>
 
             <AddGame showModal={showModal} closeModal={handleCloseModal} setLoading={setLoading} />
