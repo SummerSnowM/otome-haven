@@ -39,6 +39,7 @@ export default function Characters() {
                 <h1 className='text-center' style={{ color: '#E6B2BA' }}>Characters</h1>
                 <hr />
                 <Button onClick={handleOpenModal} style={{ backgroundColor: '#E6B2BA', border: 'transparent' }}>Add Character here</Button>
+                <br />
                 {!loading ? (
                     <Row xs={1} sm={2} md={3} lg={4}>
                         {characters ? (
