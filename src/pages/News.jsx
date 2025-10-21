@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react"
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Spinner } from 'react-bootstrap';
 import { Navigate } from "react-router-dom";
 import axios from 'axios';
 
@@ -51,19 +51,24 @@ export default function News() {
         <>
             <Container className='mt-4'>
                 <h1 className='text-center' style={{ color: '#E6B2BA' }}>Latest Otomate Games</h1>
-                <Row>
-                    {latestGames.results && (latestGames.results.length > 0 ? (
-                        <>
-                            {latestGames.results.map((game, index) => {
-                                return (
-                                    <Col xs={12} sm={12} md={6} key={index}>
-                                        <LatestGame game={game} />
-                                    </Col>
-                                )
-                            })}
-                        </>
-                    ) : <p className='mt-3'>Loading...</p>)}
-                </Row>
+                {!loading ? (
+                    <Row>
+                        {latestGames.results && (latestGames.results.length > 0 ? (
+                            <>
+                                {latestGames.results.map((game, index) => {
+                                    return (
+                                        <Col xs={12} sm={12} md={6} key={index}>
+                                            <LatestGame game={game} />
+                                        </Col>
+                                    )
+                                })}
+                            </>
+                        ) : <p className='mt-3'>Loading...</p>)}
+                    </Row>
+                ) : (
+                    <Spinner className='mt-3' style={{ color: '#E6B2BA' }} animation="border" />
+                )}
+
             </Container>
         </>
     )

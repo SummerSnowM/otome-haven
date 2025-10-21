@@ -23,17 +23,17 @@ export default function GameTrack() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        dispatch(fetchGame({ userId, gameId }));
-        //get target game info
-        axios.get(`${BASE_URL}/games/single/${id}`)
-            .then((response) => setGame(response.data.data))
-            .catch((error) => console.error(error));
+            dispatch(fetchGame({ userId, gameId }));
+            //get target game info
+            axios.get(`${BASE_URL}/games/single/${id}`)
+                .then((response) => setGame(response.data.data))
+                .catch((error) => console.error(error));
 
-        //get characters info
-        dispatch(fetchCharProfile({ userId, gameId }));
-        axios.get(`${BASE_URL}/characters/${id}`)
-            .then((response) => setCharacters(response.data.data))
-            .catch((error) => console.error(error));
+            //get characters info
+            dispatch(fetchCharProfile({ userId, gameId }));
+            axios.get(`${BASE_URL}/characters/${id}`)
+                .then((response) => setCharacters(response.data.data))
+                .catch((error) => console.error(error));
 
     }, [dispatch, userId, gameId, id])
 

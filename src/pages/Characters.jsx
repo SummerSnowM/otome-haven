@@ -1,4 +1,4 @@
-import { Container, Button, Row, Col } from 'react-bootstrap';
+import { Container, Button, Row, Col, Spinner } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -39,18 +39,23 @@ export default function Characters() {
                 <h1 className='text-center' style={{ color: '#E6B2BA' }}>Characters</h1>
                 <hr />
                 <Button onClick={handleOpenModal} style={{ backgroundColor: '#E6B2BA', border: 'transparent' }}>Add Character here</Button>
-                <Row xs={1} sm={2} md={3} lg={4}>
-                    {characters ? (
-                        characters.map((char, index) => {
-                            const image = images.find(img => img.name === char.name);
-                            return (
-                                <Col key={index}>
-                                    <CharacterCard character={char} image={image} gameId={imgId} userId={userId} setLoading={setLoading} />
-                                </Col>
-                            )
-                        })
-                    ) : <p className='mt-3'>No characters have been added yet</p>}
-                </Row>
+                {!loading ? (
+                    <Row xs={1} sm={2} md={3} lg={4}>
+                        {characters ? (
+                            characters.map((char, index) => {
+                                const image = images.find(img => img.name === char.name);
+                                return (
+                                    <Col key={index}>
+                                        <CharacterCard character={char} image={image} gameId={imgId} userId={userId} setLoading={setLoading} />
+                                    </Col>
+                                )
+                            })
+                        ) : <p className='mt-3'>No characters have been added yet</p>}
+                    </Row>
+                ) : (
+                    <Spinner className='mt-3' style={{ color: '#E6B2BA' }} animation="border" />
+                )}
+
             </Container>
 
             <AddCharacter showModal={showModal} closeModal={handleCloseModal} imageId={imgId} gameId={gameId} userId={userId} setLoading={setLoading} />
