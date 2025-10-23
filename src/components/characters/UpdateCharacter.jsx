@@ -89,7 +89,7 @@ export default function UpdateCharacter({ showModal, closeModal, character, setL
                                 type='number'
                                 max={5}
                                 min={1}
-                                step={0.5}
+                                step={0.1}
                                 value={rating}
                                 onChange={e => setRating(e.target.value)}
                                 required
